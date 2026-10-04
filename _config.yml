@@ -1,0 +1,14 @@
+title: 개발 기록
+description: 코드의 흐름을 이해하고, 서비스 품질과 비용을 기준으로 기술을 선택하는 과정
+lang: ko
+timezone: Asia/Seoul
+theme: minima
+permalink: /posts/:title/
+show_excerpts: true
+header_pages:
+  - about.md
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+exclude:
+  - README.md
