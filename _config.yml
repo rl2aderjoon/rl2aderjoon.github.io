@@ -12,3 +12,4 @@ plugins:
   - jekyll-seo-tag
 exclude:
   - README.md
+  - _design

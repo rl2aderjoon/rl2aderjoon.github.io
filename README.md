@@ -1,49 +1,18 @@
 # 개발 기록 블로그
 
-GitHub Pages와 Jekyll의 Minima 테마를 사용하는 블로그입니다.
+[공개 사이트](https://rl2aderjoon.github.io/)
 
-## 글 추가하기
+Pretendard를 사용하는 개인 매거진 페이지입니다. 가볼래와 삐용 두 프로젝트 이름을 소개하고, 글 목록은 작성할 공간을 비워 두었습니다.
 
-저장소에서 **Add file → Create new file**을 선택하고 다음 형식으로 파일을 만듭니다.
+## 파일
 
-```text
-_posts/YYYY-MM-DD-post-title.md
-```
+- `index.html`: 홈, 프로젝트 카드와 빈 글 목록, 화면 전환
+- `project-gabolle.jpg`, `project-bbiyong.png`: 두 프로젝트 이미지
+- `.nojekyll`: 완성된 HTML을 그대로 배포하도록 지정하는 파일
+- `_design/`: 로컬 시안과 결정 기록. Git에는 포함하지 않습니다.
 
-파일 내용의 시작에는 아래 정보를 넣고, 이어서 Markdown으로 글을 작성합니다.
+## 배포와 글 추가
 
-```markdown
----
-layout: post
-title: "글 제목"
-date: YYYY-MM-DD 09:00:00 +0900
-categories: [backend]
----
+GitHub Pages는 `main` 브랜치의 루트 폴더에서 배포합니다. `index.html`과 프로젝트 이미지를 함께 수정하고 올립니다.
 
-## 문제
-
-사용자가 겪는 문제와 필요한 품질을 적습니다.
-
-## 코드 흐름
-
-입력 → 검증 → 계산 → 저장 → 응답을 정리합니다.
-
-## 선택과 결과
-
-선택지, 선택한 이유, 변경 전후의 결과를 적습니다.
-
-## 남은 질문
-
-확인하지 못한 내용과 다음 실험을 적습니다.
-```
-
-커밋하면 GitHub Pages가 사이트를 다시 빌드합니다. 공개 주소 반영까지 시간이 걸릴 수 있습니다.
-
-## 설정
-
-- `_config.yml`: 블로그 제목·소개·테마
-- `index.md`: 첫 화면 소개
-- `about.md`: 블로그 소개 페이지
-- `_posts/`: 발행할 글
-
-Pages의 배포 소스는 `main` 브랜치의 루트 폴더입니다.
+지금은 공개한 글이 없습니다. 실제 글을 작성한 뒤 홈의 빈 `.writing-columns`에 제목, 요약과 글 링크를 추가합니다. 현재 배포는 HTML을 그대로 제공하므로 Markdown 글을 자동으로 변환하지 않습니다. 기존 Jekyll 설정 파일과 소개 Markdown은 이전 버전의 기록으로 남아 있습니다.

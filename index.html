@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="rl2aderjoon의 작업과 글. 가볼래, 삐용."><meta name="theme-color" content="#f0efed"><title>홈 · rl2aderjoon</title><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"><style>
+:root{--ink:#20211f;--muted:#7b7c76;--line:#e6e6e0;--accent:#455c48}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:linear-gradient(120deg,#f4dfd2 0%,#f0efed 52%,#ecefe9 100%);font:15px/1.7 "Pretendard Variable",Pretendard,Arial,"Malgun Gothic",sans-serif}
+button{font:inherit;color:inherit;border:0;background:none;padding:0;text-align:left;cursor:pointer}button,a{touch-action:manipulation}a{color:inherit;text-underline-offset:5px}button:focus-visible,a:focus-visible,.project-slot-row:focus-visible{outline:2px solid var(--accent);outline-offset:5px}[hidden]{display:none!important}
+h1,h2,p,figure{margin:0}h1,h2{font-weight:400;letter-spacing:-.045em;line-height:1.4}.eyebrow{color:var(--muted);font-size:11px}
+.collection-bar{max-width:1360px;margin:0 auto;padding:14px 32px;color:#77766f;font-size:10px;letter-spacing:.08em}
+.shell{max-width:1360px;margin:0 auto 44px;padding:0 64px;background:#fff;border-radius:32px;overflow:hidden}
+.site-header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:36px 0 26px;border-bottom:1px solid var(--line);gap:25px}
+.brand{font-size:23px;font-weight:500;letter-spacing:-.065em;line-height:1}.site-nav{display:flex;gap:24px}.site-nav button{font-size:12px;color:var(--muted);padding:4px 0}.site-nav button[aria-current=page]{color:var(--ink);box-shadow:0 1px var(--ink)}.external{justify-self:end;text-decoration:none;font-size:12px}
+.screen{padding-top:36px}.home-projects{padding:8px 0 46px}.projects-top{margin-bottom:27px}.projects-top .eyebrow{margin-bottom:10px}.projects-top h1{font-size:34px;line-height:1.35;letter-spacing:-.045em}
+.project-slot-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}.project-slot{display:block;position:relative;aspect-ratio:1/1.12;border-radius:22px;overflow:hidden;background:#f2f3ef;width:100%;isolation:isolate}
+.project-slot img{display:block;width:100%;height:100%;object-fit:cover}.project-slot:not(.project-empty)::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 48%,rgba(13,19,15,.78));pointer-events:none}
+.slot-copy{position:absolute;left:19px;right:17px;bottom:18px;z-index:1;color:#fff;font-size:19px;line-height:1.4;letter-spacing:-.025em;font-weight:500}.gabolle-slot img{object-position:50% 0}.bbiyong-slot img{object-position:50% 45%}.project-empty{background:#f4f4ef}
+.experience-line{display:grid;grid-template-columns:1fr 4fr;gap:32px;margin-top:39px}.experience-line .eyebrow{font-size:12px;padding-top:7px}.experience-line p{font-size:24px;line-height:1.65;letter-spacing:-.035em;max-width:800px;word-break:keep-all}
+.more-writing{padding:38px 0 48px;border-top:1px solid var(--line)}.more-heading{margin-bottom:28px}.more-heading h2{font-size:27px;font-weight:400}.writing-columns{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:0}.writing-column{padding:0 26px;border-right:1px solid var(--line);min-width:0;min-height:300px}.writing-column:first-child{padding-left:0}.writing-column:last-child{padding-right:0;border:0}.writing-space{border-top:1px solid var(--ink);min-height:300px}
+.page-title{font-size:50px;margin:8px 0 28px}.empty-page{min-height:430px;margin-bottom:48px;border-top:1px solid var(--line)}.work-projects{padding-bottom:48px}
+.footer{display:flex;justify-content:space-between;gap:25px;padding:26px 0 32px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}.footer-links{display:flex;gap:25px}.footer a{text-decoration:none}
+@media(max-width:1450px){.shell{margin-inline:28px;padding-inline:52px}.collection-bar{padding-inline:52px}}
+@media(max-width:1050px){.shell{padding-inline:36px}.site-header{grid-template-columns:1fr auto;gap:16px}.external{display:none}.site-nav{gap:17px}.project-slot-row{gap:13px}.project-slot{border-radius:18px}.slot-copy{left:14px;bottom:14px;font-size:17px}.experience-line p{font-size:23px}.writing-column{padding-inline:21px}}
+@media(max-width:760px){.site-header{grid-template-columns:1fr auto}.site-nav{grid-column:1/-1;grid-row:2;justify-content:flex-start;gap:25px}.shell{margin-inline:18px;padding-inline:27px;border-radius:26px}.collection-bar{padding-inline:29px}.project-slot-row{grid-template-columns:repeat(4,minmax(185px,1fr));overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;padding-bottom:5px}.project-slot{scroll-snap-align:start}.projects-top h1{font-size:28px}.experience-line{grid-template-columns:1fr 3fr;gap:20px}.experience-line p{font-size:21px}.writing-columns{grid-template-columns:1fr 1fr}.writing-column:nth-child(2){border-right:0;padding-right:0}.writing-column:last-child{grid-column:1/-1;margin-top:28px;padding:0}}
+@media(max-width:650px){.projects-top h1{font-size:28px}.experience-line{grid-template-columns:1fr;gap:12px}.experience-line p{font-size:22px}.site-nav{gap:20px}.site-nav button{font-size:11px}.footer{display:block}.footer-links{margin-top:12px}.page-title{font-size:38px}}
+@media(max-width:540px){.writing-columns{display:block}.writing-column,.writing-column:first-child,.writing-column:nth-child(2),.writing-column:last-child{padding:0;border:0;margin:0;min-height:140px}.writing-column+.writing-column{margin-top:24px}.writing-space{min-height:140px}.more-writing{padding-top:30px}.more-heading h2{font-size:26px}}
+@media(max-width:400px){.shell{margin-inline:10px;padding-inline:20px;border-radius:22px}.collection-bar{padding-inline:22px}.brand{font-size:21px}.site-nav{justify-content:space-between;gap:12px;width:100%}.project-slot-row{grid-template-columns:repeat(4,190px)}.projects-top h1{font-size:26px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head>
+<body><div class="collection-bar">WRITING &amp; WORK</div><div class="shell">
+<header class="site-header"><button class="brand" type="button" data-view="home" aria-label="rl2aderjoon 홈">rl2aderjoon.</button><nav class="site-nav" aria-label="사이트 화면"><button type="button" data-view="home" aria-current="page">Home</button><button type="button" data-view="work">Work</button><button type="button" data-view="essay">Writing</button><button type="button" data-view="notes">Notes</button><button type="button" data-view="photos">Photos</button></nav><a class="external" href="https://github.com/rl2aderjoon" target="_blank" rel="noopener noreferrer">GitHub ↗</a></header>
+<main>
+<section class="screen" id="view-home" aria-label="프로젝트와 글 목록">
+<section class="home-projects" aria-labelledby="home-projects-title"><div class="projects-top"><p class="eyebrow">Selected projects</p><h1 id="home-projects-title">만든 것들,<br>그 안에서 배운 것들.</h1></div><div class="project-slot-row" tabindex="0" role="group" aria-label="프로젝트 네 칸: 가볼래, 삐용, 두 빈 자리">
+<figure class="project-slot gabolle-slot"><img src="project-gabolle.jpg" alt="가볼래 앱 화면" width="1082" height="3985" loading="lazy"><figcaption class="slot-copy">가볼래</figcaption></figure>
+<figure class="project-slot bbiyong-slot"><img src="project-bbiyong.png" alt="삐용 로봇의 조립 설계 이미지" width="1200" height="827" loading="lazy"><figcaption class="slot-copy">삐용</figcaption></figure>
+<div class="project-slot project-empty" aria-hidden="true"></div><div class="project-slot project-empty" aria-hidden="true"></div>
+</div>
+<div class="experience-line"><span class="eyebrow">기록하는 이유</span><p>기능이 움직이는 흐름을 이해하고,<br>기술을 선택한 이유를 글로 남깁니다.</p></div></section>
+<section class="more-writing" aria-labelledby="more-writing-title"><header class="more-heading"><h2 id="more-writing-title">이어 읽을 글들.</h2></header><div class="writing-columns" aria-hidden="true"><div class="writing-column"><div class="writing-space"></div></div><div class="writing-column"><div class="writing-space"></div></div><div class="writing-column"><div class="writing-space"></div></div></div></section></section>
+<section class="screen" id="view-work" hidden aria-label="프로젝트 목록"><h1 class="page-title">Projects.</h1><div class="work-projects"><div class="project-slot-row" tabindex="0" role="group" aria-label="프로젝트 네 칸: 가볼래, 삐용, 두 빈 자리">
+<figure class="project-slot gabolle-slot"><img src="project-gabolle.jpg" alt="가볼래 앱 화면" width="1082" height="3985" loading="lazy"><figcaption class="slot-copy">가볼래</figcaption></figure>
+<figure class="project-slot bbiyong-slot"><img src="project-bbiyong.png" alt="삐용 로봇의 조립 설계 이미지" width="1200" height="827" loading="lazy"><figcaption class="slot-copy">삐용</figcaption></figure>
+<div class="project-slot project-empty" aria-hidden="true"></div><div class="project-slot project-empty" aria-hidden="true"></div>
+</div></div></section>
+<section class="screen" id="view-essay" hidden aria-label="글 목록"><h1 class="page-title">Writing.</h1><div class="work-projects"><div class="writing-columns" aria-hidden="true"><div class="writing-column"><div class="writing-space"></div></div><div class="writing-column"><div class="writing-space"></div></div><div class="writing-column"><div class="writing-space"></div></div></div></div></section>
+<section class="screen" id="view-notes" hidden aria-label="노트 목록"><h1 class="page-title">Notes.</h1><div class="empty-page" aria-hidden="true"></div></section>
+<section class="screen" id="view-photos" hidden aria-label="사진 목록"><h1 class="page-title">Photos.</h1><div class="empty-page" aria-hidden="true"></div></section>
+</main><footer class="footer"><span>© rl2aderjoon · 작업과 생각, 그리고 장면들.</span><div class="footer-links"><button type="button" data-view="home">Back to index ↑</button><a href="https://github.com/rl2aderjoon" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></footer></div><script>const viewNames={home:'홈',work:'프로젝트',essay:'글',notes:'노트',photos:'사진'};
+function showView(view,scroll=true){
+ if(!Object.hasOwn(viewNames,view))view='home';
+ document.querySelectorAll('.screen').forEach(section=>section.hidden=section.id!=='view-'+view);
+ document.querySelectorAll('.site-nav [data-view]').forEach(button=>{if(button.dataset.view===view)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+ const url=new URL(location.href);if(view==='home')url.searchParams.delete('view');else url.searchParams.set('view',view);url.searchParams.delete('note');url.searchParams.delete('project');url.hash='';history.replaceState(null,'',url);
+ document.title=viewNames[view]+' · rl2aderjoon';if(scroll)window.scrollTo({top:0,behavior:'instant'});
+}
+document.addEventListener('click',event=>{const target=event.target.closest('[data-view]');if(target)showView(target.dataset.view);});
+showView(new URL(location.href).searchParams.get('view')||'home',false);
+</script></body></html>
