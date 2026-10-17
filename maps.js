@@ -43,7 +43,7 @@ function render() {
   list.innerHTML = displayed.length ? displayed.map(map => `<li class="map-row"><button class="map-open" data-preview="${map.id}" aria-label="${map.name} 지도 미리보기"><span class="row-index">${String(catalog.indexOf(map)+1).padStart(2,'0')}</span><img class="thumbnail" src="assets/maps/${map.id}-thumb.svg?v=4" alt="" loading="lazy" width="72" height="72"><span class="city-title">${map.name}<span class="city-en">${map.english}</span></span><span class="area-count">${map.areas}개 ${map.grouped ? '권역' : '지역'}</span></button><span class="download-count" title="GitHub 파일 다운로드 횟수 · 반복 다운로드 포함">${counts[map.id] === undefined ? '—' : counts[map.id].toLocaleString('ko-KR')}<span> 다운로드</span></span>${downloadLink(map,'list')}</li>`).join('') : '<li class="empty">찾는 지역이 없어요. 다른 이름으로 검색해 보세요.</li>';
 }
 function openPreview(map, updateUrl=true) {
-  document.querySelector('#preview-title').textContent = `${map.name}, 어디서 만날까?`;
+  document.querySelector('#preview-title').textContent = `${map.name} 트친 어디 살아?`;
   const image = document.querySelector('#preview-image');
   image.src = `assets/maps/${map.id}.svg?v=4`;image.alt = `${map.name} 번호별 만남 지도`;
   document.querySelector('#preview-download').innerHTML = downloadLink(map,'preview');
