@@ -21,12 +21,13 @@ def load(name):
     return json.loads(urllib.request.urlopen(url).read())['features']
 
 def polygons(g):return list(g.geoms) if g.geom_type=='MultiPolygon' else [g]
-def solid_geometry(geom):
+def solid_geometry(geom,min_area=0):
     # Fill interior rings and close narrow seams between merged districts.
     filled=unary_union([Polygon(p.exterior) for p in polygons(geom)])
     closed=filled.buffer(.0008,join_style=2).buffer(-.0008,join_style=2)
-    largest=max(p.area for p in polygons(closed))
-    return unary_union([Polygon(p.exterior) for p in polygons(closed) if p.area>=largest*.0001])
+    parts=polygons(closed);largest=max(parts,key=lambda p:p.area)
+    threshold=max(min_area,largest.area*.01)
+    return unary_union([Polygon(p.exterior) for p in parts if p.area>=threshold or p is largest])
 def font(size,bold=False):return ImageFont.truetype(str(FONTS/('Pretendard-Bold.otf' if bold else 'Pretendard-Regular.otf')),size)
 def embedded_font(text):
     f=TTFont(FONTS/'Pretendard-Bold.otf');options=subset.Options();options.flavor='woff2'
@@ -35,6 +36,9 @@ def embedded_font(text):
     return base64.b64encode(output.getvalue()).decode()
 
 def make(slug,name,en,groups,grouped=False):
+    # Remove tiny islands before fitting the map, so they cannot shrink the mainland.
+    min_area=sum(geom.area for _,geom in groups)*.002
+    groups=[(label,solid_geometry(geom,min_area).simplify(.003,preserve_topology=True)) for label,geom in groups]
     title=f'#{name}_지역_트친_찾기'
     im=Image.new('RGB',(1600,1600),'white');d=ImageDraw.Draw(im)
     d.text((85,64),title,font=font(61,True),fill='#21392F')
@@ -55,7 +59,7 @@ def make(slug,name,en,groups,grouped=False):
             d.rounded_rectangle((80,950,480,1480),radius=12,outline='#DEE4DE',width=2)
             d.text((110,975),'옹진군 · 별도 축척',font=font(24,True),fill='#21392F')
             paths.append('<rect x="80" y="950" width="400" height="530" rx="12" fill="none" stroke="#DEE4DE" stroke-width="2"/><text x="110" y="1000" font-size="24">옹진군 · 별도 축척</text>')
-        simple=solid_geometry(geom).simplify(.003,preserve_topology=True)
+        simple=geom
         for p in polygons(simple):
             pts=[xy(x,y) for x,y,*_ in p.exterior.coords]
             d.polygon(pts,fill=COLORS[i%8]);d.line(pts,fill='white',width=4,joint='curve')
@@ -77,9 +81,6 @@ def make(slug,name,en,groups,grouped=False):
             if valid and all(box[2]<b[0] or box[0]>b[2] or box[3]<b[1] or box[1]>b[3] for b in placed):break
             angle=step*2.39996;r=14+step*1.8;x=original[0]+math.cos(angle)*r;y=original[1]+math.sin(angle)*r
         placed.append(box)
-        if math.hypot(x-original[0],y-original[1])>45:
-            d.line([original,(x,y)],fill='#83978C',width=2)
-            svg.append(f'<path d="M{original[0]:.1f},{original[1]:.1f}L{x:.1f},{y:.1f}" stroke="#83978C" stroke-width="2"/>')
         top=y-h/2
         d.text((x,top),str(i),font=font(nsize,True),fill='#21392F',anchor='mt')
         svg.append(f'<text x="{x:.1f}" y="{top+nsize:.1f}" text-anchor="middle" font-size="{nsize}">{i}</text>')
