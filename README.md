@@ -1,4 +1,15 @@
-# 개발 기록 블로그
+# 가볼래? — 만남 지도
+
+현재 첫 화면은 지도 다운로드를 위한 임시 홍보 페이지입니다. [운영 방법과 통계 설명](MAPS.md)을 확인하세요.
+
+- [지도 홍보 페이지](https://rl2aderjoon.github.io/)
+- [보관한 개발 블로그](https://rl2aderjoon.github.io/blog.html)
+- 전국 17개 시도 + 전국 지도, 무료 PNG 다운로드
+- GitHub Releases의 파일별 다운로드 횟수를 사용하며 별도 서버나 GA4 계정이 필요 없습니다.
+
+아래는 보관한 블로그의 기존 설명입니다.
+
+## 기존 개발 기록 블로그
 
 [공개 사이트](https://rl2aderjoon.github.io/)
 
