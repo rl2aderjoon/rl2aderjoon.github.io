@@ -9,3 +9,5 @@
 body{font-family:Pretendard,sans-serif}.preview-info{display:none}.preview-body{display:block}.preview-body>img{max-height:68dvh;object-fit:contain;background:#fff}.thumbnail{object-fit:contain;clip-path:none;transform:none}.download-count{color:var(--muted);font:11px monospace;min-width:90px;text-align:right}.download-count>span{font:10px Pretendard,sans-serif}.map-row .area-count{margin-right:5px}
 @media(max-width:580px){.download-count{min-width:22px;font-size:10px}.download-count>span{display:none}.map-open{gap:12px}.map-row{gap:10px}.thumbnail{width:35px}.city-title{font-size:27px}.city-en{font-size:8px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+#maps{padding-bottom:64px}

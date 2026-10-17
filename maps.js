@@ -70,10 +70,6 @@ document.querySelector('#theme-toggle').addEventListener('click',() => {
   document.querySelector('#theme-toggle').setAttribute('aria-label',dark?'밝은 테마로 바꾸기':'어두운 테마로 바꾸기');
   try{localStorage.setItem('gabolle-theme',dark?'dark':'light');}catch{}
 });
-document.querySelector('#copy-link').addEventListener('click',async()=>{
-  try{await navigator.clipboard.writeText(location.href);notify('링크를 복사했어요. 만나고 싶은 친구에게 보내보세요.');}
-  catch{notify('주소창의 링크를 복사해 친구에게 보내주세요.');}
-});
 fetch('assets/maps/catalog.json').then(response=>{if(!response.ok)throw new Error('catalog');return response.json();}).then(data=>{
   catalog=data;render();loadCounts();
   const selected=catalog.find(map=>map.id===new URL(location.href).searchParams.get('map'));if(selected)openPreview(selected,false);
