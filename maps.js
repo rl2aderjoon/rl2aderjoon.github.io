@@ -39,7 +39,6 @@ function downloadLink(map, location) {
 function render() {
   const query = document.querySelector('#search').value.trim().toLowerCase();
   const displayed = catalog.filter(map => (currentFilter === 'all' || (currentFilter === 'city' ? ['seoul','busan','daegu','incheon','gwangju','daejeon','ulsan','sejong'].includes(map.id) : !['seoul','busan','daegu','incheon','gwangju','daejeon','ulsan','sejong','korea'].includes(map.id))) && (!query || `${map.name} ${map.english}`.toLowerCase().includes(query)));
-  document.querySelector('#result-count').textContent = `${displayed.length}개의 지도`;
   list.innerHTML = displayed.length ? displayed.map(map => `<li class="map-row"><button class="map-open" data-preview="${map.id}" aria-label="${map.name} 지도 미리보기"><span class="row-index">${String(catalog.indexOf(map)+1).padStart(2,'0')}</span><img class="thumbnail" src="assets/maps/${map.id}-thumb.svg?v=4" alt="" loading="lazy" width="72" height="72"><span class="city-title">${map.name}<span class="city-en">${map.english}</span></span><span class="area-count">${map.areas}개 ${map.grouped ? '권역' : '지역'}</span></button><span class="download-count" title="GitHub 파일 다운로드 횟수 · 반복 다운로드 포함">${counts[map.id] === undefined ? '—' : counts[map.id].toLocaleString('ko-KR')}<span> 다운로드</span></span>${downloadLink(map,'list')}</li>`).join('') : '<li class="empty">찾는 지역이 없어요. 다른 이름으로 검색해 보세요.</li>';
 }
 function openPreview(map, updateUrl=true) {

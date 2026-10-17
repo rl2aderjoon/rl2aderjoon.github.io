@@ -14,3 +14,5 @@ body{font-family:Pretendard,sans-serif}.preview-info{display:none}.preview-body{
 .header{justify-content:flex-end}.intro{min-height:490px;padding-bottom:70px}
 .header-right{gap:12px}.header-right>.contact-button{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line);border-radius:24px;font-size:12px}.contact-button svg{width:17px;height:17px}.contact-button:hover{background:var(--surface)}
 @media(max-width:580px){.intro{min-height:0;padding-bottom:45px}.hero-map{margin-top:40px}}
+
+.intro h1{margin-top:0}
