@@ -39,12 +39,14 @@ def make(slug,name,en,groups,grouped=False):
     # Remove tiny islands before fitting the map, so they cannot shrink the mainland.
     min_area=sum(geom.area for _,geom in groups)*.002
     groups=[(label,solid_geometry(geom,min_area).simplify(.003,preserve_topology=True)) for label,geom in groups]
-    title=f'#{name}_지역_트친_찾기'
+    titles=['#같은지역_트친_찾기',f'#{name}_트친_찾기']
     im=Image.new('RGB',(1600,1600),'white');d=ImageDraw.Draw(im)
-    d.text((85,64),title,font=font(61,True),fill='#21392F')
-    encoded=embedded_font(title+''.join(g[0] for g in groups)+'0123456789 ·별도축척')
+    for i,title in enumerate(titles):
+        d.text((85,53+i*65),title,font=font(52,True),fill='#21392F')
+    encoded=embedded_font(''.join(titles)+''.join(g[0] for g in groups)+'0123456789 ·별도축척')
     style=f'<style>@font-face{{font-family:Pretendard;src:url(data:font/woff2;base64,{encoded}) format("woff2");font-weight:100 900}}text{{font-family:Pretendard,sans-serif;font-weight:700;fill:#21392F}}</style>'
-    svg=['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1600">',style,'<rect width="1600" height="1600" fill="white"/>',f'<text x="85" y="122" font-size="61">{title}</text>']
+    svg=['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1600">',style,'<rect width="1600" height="1600" fill="white"/>']
+    svg.extend(f'<text x="85" y="{102+i*65}" font-size="52">{title}</text>' for i,title in enumerate(titles))
     main_groups=[g for g in groups if not(slug=='incheon' and g[0]=='옹진군')]
     total=unary_union([g[1] for g in main_groups]);xmin,ymin,xmax,ymax=total.bounds
     cosine=math.cos(math.radians((ymin+ymax)/2));dx=(xmax-xmin)*cosine;dy=ymax-ymin
