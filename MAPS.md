@@ -4,6 +4,8 @@ https://rl2aderjoon.github.io/ · 기존 블로그: `/blog.html`
 
 ## 다운로드 수: 서버나 GA4 계정이 필요 없습니다
 
+현재 다운로드 파일은 `maps-2026-10-v2` 릴리스입니다. 화면 집계는 이전 `maps-2026-10`과 현재 릴리스의 파일별 횟수를 합산해 누적 수치를 유지합니다. 새로운 릴리스를 추가할 때 `maps.js`의 `countTags`에도 추가하세요. 지도 제목은 `#서울_지역_트친_찾기` 형식이며 내부 구멍과 가느다란 틈을 채워 단색 면으로 표시합니다.
+
 PNG를 이 저장소의 `maps-2026-10` GitHub Release 첨부파일로 제공합니다. 각 PNG 받기 링크는 릴리스 파일로 연결되며, GitHub가 제공하는 `download_count`를 공개 REST API로 한 번에 조회합니다. 화면에는 지역별 횟수를 표시하고 브라우저에 5분간 캐시합니다. API 오류나 호출 제한이 생기면 횟수만 `—`로 표시하며 다운로드는 그대로 됩니다. 브라우저 코드에 토큰은 넣지 않습니다.
 
 - [다운로드 파일과 릴리스](https://github.com/rl2aderjoon/rl2aderjoon.github.io/releases/tag/maps-2026-10)

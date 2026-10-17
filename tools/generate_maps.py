@@ -2,7 +2,7 @@
 import base64, io, json, math, urllib.request
 from pathlib import Path
 from xml.sax.saxutils import escape
-from shapely.geometry import shape
+from shapely.geometry import shape, Polygon
 from shapely.ops import unary_union
 from PIL import Image, ImageDraw, ImageFont
 from fontTools import subset
@@ -21,6 +21,12 @@ def load(name):
     return json.loads(urllib.request.urlopen(url).read())['features']
 
 def polygons(g):return list(g.geoms) if g.geom_type=='MultiPolygon' else [g]
+def solid_geometry(geom):
+    # Fill interior rings and close narrow seams between merged districts.
+    filled=unary_union([Polygon(p.exterior) for p in polygons(geom)])
+    closed=filled.buffer(.0008,join_style=2).buffer(-.0008,join_style=2)
+    largest=max(p.area for p in polygons(closed))
+    return unary_union([Polygon(p.exterior) for p in polygons(closed) if p.area>=largest*.0001])
 def font(size,bold=False):return ImageFont.truetype(str(FONTS/('Pretendard-Bold.otf' if bold else 'Pretendard-Regular.otf')),size)
 def embedded_font(text):
     f=TTFont(FONTS/'Pretendard-Bold.otf');options=subset.Options();options.flavor='woff2'
@@ -29,7 +35,7 @@ def embedded_font(text):
     return base64.b64encode(output.getvalue()).decode()
 
 def make(slug,name,en,groups,grouped=False):
-    title=f'{name} 지역 트친 찾기'
+    title=f'#{name}_지역_트친_찾기'
     im=Image.new('RGB',(1600,1600),'white');d=ImageDraw.Draw(im)
     d.text((85,64),title,font=font(61,True),fill='#21392F')
     encoded=embedded_font(title+''.join(g[0] for g in groups)+'0123456789 ·별도축척')
@@ -49,14 +55,11 @@ def make(slug,name,en,groups,grouped=False):
             d.rounded_rectangle((80,950,480,1480),radius=12,outline='#DEE4DE',width=2)
             d.text((110,975),'옹진군 · 별도 축척',font=font(24,True),fill='#21392F')
             paths.append('<rect x="80" y="950" width="400" height="530" rx="12" fill="none" stroke="#DEE4DE" stroke-width="2"/><text x="110" y="1000" font-size="24">옹진군 · 별도 축척</text>')
-        simple=geom.simplify(.003,preserve_topology=True)
+        simple=solid_geometry(geom).simplify(.003,preserve_topology=True)
         for p in polygons(simple):
             pts=[xy(x,y) for x,y,*_ in p.exterior.coords]
             d.polygon(pts,fill=COLORS[i%8]);d.line(pts,fill='white',width=4,joint='curve')
             path='M'+'L'.join(f'{x:.1f},{y:.1f}' for x,y in pts)+'Z'
-            for interior in p.interiors:
-                hole=[xy(x,y) for x,y,*_ in interior.coords];d.polygon(hole,fill='white')
-                path+='M'+'L'.join(f'{x:.1f},{y:.1f}' for x,y in hole)+'Z'
             paths.append(f'<path d="{path}" fill="{COLORS[i%8]}" stroke="white" stroke-width="4" stroke-linejoin="round" fill-rule="evenodd"/>')
         largest=max(polygons(geom),key=lambda p:p.area);point=largest.representative_point();x,y=xy(point.x,point.y)
         name_size=27 if grouped else 26 if len(groups)<24 else 21

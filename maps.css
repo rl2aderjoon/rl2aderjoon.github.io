@@ -11,3 +11,5 @@ body{font-family:Pretendard,sans-serif}.preview-info{display:none}.preview-body{
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 
 #maps{padding-bottom:64px}
+.header{justify-content:flex-end}.intro{min-height:490px;padding-bottom:70px}
+@media(max-width:580px){.intro{min-height:0;padding-bottom:45px}.hero-map{margin-top:40px}}
