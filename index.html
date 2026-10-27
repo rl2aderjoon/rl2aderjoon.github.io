@@ -11,10 +11,13 @@
 <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 :root{
-  --bg:#e8e8e6; --bg-2:#f2f2f0; --card:#fff; --fg:#121212; --fg-2:#3a3a38; --mute:#7c7c78; --line:#cfcfcb; --dim:#a3a3a0; --ghost:#cdcdc9;
-  --signal:#ff5a1f; --rail:300px; --gut:24px; --ease:cubic-bezier(.2,.7,.1,1);
+  --bg:#e8e8e6; --bg-2:#f2f2f0; --card:#fff; --fg:#121212; --fg-2:#3a3a38; --mute:#7c7c78; --line:#c9c9c5; --dim:#a3a3a0; --ghost:#cdcdc9;
+  --signal:#ff5a1f; --gut:24px; --ease:cubic-bezier(.2,.7,.1,1);
+  /* 네 칸을 나누는 두 선의 위치. 스크롤에 따라 스크립트가 바꾼다 */
+  --cx:55vw; --cy:57vh; --mx:300px; --cyF:132px; --railW:300px;
+  --ik:1; --ho:1;
 }
-body.night{--bg:#111; --bg-2:#181818; --card:#1b1b1b; --fg:#f1f1ee; --fg-2:#cfcfcb; --mute:#8a8a86; --line:#2a2a2a; --dim:#5c5c59; --ghost:#262626}
+body.night{--bg:#111; --bg-2:#181818; --card:#1b1b1b; --fg:#f1f1ee; --fg-2:#cfcfcb; --mute:#8a8a86; --line:#2e2e2e; --dim:#5c5c59; --ghost:#262626}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 "Pretendard Variable",Pretendard,-apple-system,"Malgun Gothic",sans-serif;letter-spacing:-.01em;word-break:keep-all;overflow-x:hidden;transition:background-color .7s ease,color .7s ease}
@@ -24,35 +27,47 @@ h1,h2,h3,h4,p,figure,ul,ol,dl,dd{margin:0}
 ul,ol{padding:0;list-style:none}
 :focus-visible{outline:2px solid var(--signal);outline-offset:3px}
 code{font:.92em/1.5 ui-monospace,Consolas,monospace;letter-spacing:0;background:rgba(127,127,127,.14);padding:0 3px}
+[id]{scroll-margin-top:var(--cyF)}
 
-/* ---------- top bar ---------- */
-.bar{position:fixed;inset:0 0 auto 0;z-index:60;display:grid;grid-template-columns:var(--rail) 1fr auto auto;gap:var(--gut);align-items:start;padding:16px var(--gut);font-size:12px;line-height:1.35;color:var(--fg);transition:color .7s}
-.mark{display:flex;gap:10px;align-items:flex-start;text-decoration:none}
+/* ---------- 네 칸 프레임: 선, 교차점 ---------- */
+.vline,.hline,.cross{position:fixed;z-index:55;pointer-events:none}
+.vline{top:0;bottom:0;left:var(--cx);width:1px;background:var(--line);transition:background-color .7s}
+.hline{left:0;right:0;top:var(--cy);height:1px;background:var(--line);transition:background-color .7s}
+.cross{left:var(--cx);top:var(--cy);width:23px;height:23px;margin:-11px 0 0 -11px}
+.cross::before,.cross::after{content:"";position:absolute;background:var(--fg);transition:background-color .7s}
+.cross::before{left:11px;top:0;width:1px;height:23px}
+.cross::after{top:11px;left:0;height:1px;width:23px}
+
+/* ---------- 위쪽 두 칸: 헤더 띠 ---------- */
+.band{position:fixed;inset:0 0 auto 0;height:var(--cy);z-index:50;background:var(--bg);transition:background-color .7s;font-size:12px;line-height:1.35}
+.mark{position:absolute;left:var(--gut);top:16px;display:flex;gap:10px;align-items:flex-start;text-decoration:none}
 .mark-bars{display:grid;gap:3px;padding-top:2px}
 .mark-bars i{display:block;height:4px;background:currentColor}
 .mark-bars i:nth-child(1){width:28px}.mark-bars i:nth-child(2){width:20px}.mark-bars i:nth-child(3){width:28px}
 .mark b{font-weight:600;display:block}
-.bar-tag{color:var(--mute)}
-.bar nav{display:grid;gap:1px}
-.bar nav a{text-decoration:none;color:var(--mute);transition:color .2s}.bar nav a:hover{color:var(--fg)}
-.bar .cta{text-decoration:none;font-weight:600}
-
-/* ---------- layout ---------- */
-.wrap{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);gap:var(--gut);padding:0 var(--gut)}
-.main{min-width:0;border-left:1px solid var(--line);padding-left:var(--gut);transition:border-color .7s}
-
-/* ---------- moving rail ---------- */
-.rail{position:sticky;top:0;height:100vh;padding:96px 0 22px;display:flex;flex-direction:column;font-size:13px;color:var(--fg-2)}
-.stage{position:relative;flex:1}
-.panel{position:absolute;inset:0 0 auto 0;opacity:0;transform:translateY(18px);pointer-events:none;transition:opacity .5s ease,transform .7s var(--ease)}
-.panel.on{opacity:1;transform:none;pointer-events:auto;transition-delay:.08s}
-.panel>*{transition:transform .7s var(--ease)}
-.panel p+p{margin-top:12px}
-.panel strong{color:var(--fg);font-weight:600}
-.btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;font-size:12px;font-weight:500;text-decoration:none;background:var(--fg);color:var(--bg);border:0;cursor:pointer;transition:background .7s,color .7s,transform .2s}
+.tag{position:absolute;top:16px;left:max(calc(var(--cx) + var(--gut)),340px);font-size:clamp(13px,1.1vw,17px);font-weight:500;letter-spacing:-.02em;line-height:1.3}
+.band nav{position:absolute;top:16px;right:140px;display:grid;gap:1px;font-size:13px;font-weight:500}
+.band nav a{text-decoration:none;color:var(--mute);transition:color .2s}.band nav a:hover{color:var(--fg)}
+.band .cta{position:absolute;top:16px;right:var(--gut);text-decoration:none;font-weight:600;font-size:13px}
+.band-left{position:absolute;left:var(--gut);bottom:18px;width:clamp(260px,calc(var(--cx) - var(--gut) * 2),560px)}
+.intro{overflow:hidden;max-height:calc(var(--ik) * 220px);opacity:var(--ik);font-size:clamp(13px,1.05vw,16px);line-height:1.5;color:var(--fg-2)}
+.intro p{padding-top:14px}
+.intro strong{color:var(--fg);font-weight:600}
+.band-head{position:absolute;left:calc(var(--cx) + var(--gut));right:var(--gut);bottom:18px;opacity:var(--ho);transform:translateY(calc((1 - var(--ho)) * -30px));pointer-events:none}
+.band-head h1{font-size:clamp(30px,3.7vw,66px);line-height:1.04;letter-spacing:-.055em;font-weight:600;color:var(--dim)}
+.band-head h1 b{font-weight:600;color:var(--fg)}
+.btns{display:flex;gap:6px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;font-size:13px;font-weight:500;text-decoration:none;background:var(--fg);color:var(--bg);border:0;cursor:pointer;white-space:nowrap;transition:background-color .7s,color .7s,transform .2s}
 .btn:hover{transform:translateY(-1px)}
 .btn.ghost{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 1px var(--line)}
+
+/* ---------- 왼쪽 아래 칸: 사이드바 ---------- */
+.side{position:fixed;left:0;top:var(--cy);bottom:0;width:var(--cx);z-index:40;overflow:hidden;opacity:var(--so,0)}
+.side-in{width:var(--railW);height:100%;padding:26px var(--gut) 22px;display:flex;flex-direction:column;font-size:13px;color:var(--fg-2)}
+.stage-r{position:relative;flex:1}
+.panel{position:absolute;inset:0 0 auto 0;opacity:0;transform:translateY(18px);pointer-events:none;transition:opacity .5s ease,transform .7s var(--ease)}
+.panel.on{opacity:1;transform:none;pointer-events:auto;transition-delay:.08s}
+.panel p+p{margin-top:12px}
 .rp-k{font-size:12px;color:var(--mute);display:flex;gap:8px;align-items:center}
 .rp-k::before{content:"";width:6px;height:6px;background:currentColor}
 .rp-t{font-size:26px;line-height:1.15;letter-spacing:-.045em;font-weight:500;color:var(--fg);margin-top:14px}
@@ -62,6 +77,9 @@ code{font:.92em/1.5 ui-monospace,Consolas,monospace;letter-spacing:0;background:
 .rp-dl dd{color:var(--fg)}
 .rp-count{font-size:64px;line-height:.9;letter-spacing:-.06em;font-weight:500;color:var(--fg);margin-top:18px;font-variant-numeric:tabular-nums}
 .rp-count small{font-size:18px;color:var(--mute);letter-spacing:-.02em}
+.rp-stats{display:flex;gap:28px;margin-top:28px}
+.rp-stats b{display:block;font-size:40px;line-height:1;letter-spacing:-.05em;font-weight:500;color:var(--fg)}
+.rp-stats span{display:block;font-size:11px;color:var(--mute);margin-top:6px}
 .prog{height:2px;background:var(--line);margin-top:22px;position:relative;overflow:hidden}
 .prog i{position:absolute;inset:0 auto 0 0;width:0;background:var(--fg)}
 .rp-next{display:inline-block;margin-top:14px;font-size:12px;text-decoration:none;color:var(--mute);transition:color .2s}
@@ -74,26 +92,22 @@ code{font:.92em/1.5 ui-monospace,Consolas,monospace;letter-spacing:0;background:
 .r-index a.on{color:var(--fg);padding-left:8px}
 .r-index a:hover{color:var(--fg)}
 
-/* ---------- hero (pinned) ---------- */
-.hero{height:280vh;position:relative}
-.pin{position:sticky;top:0;height:100vh}
-.hero .pin{display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 24px}
-.hero-copy{will-change:transform,opacity}
-.hero h1{font-size:clamp(34px,5.2vw,84px);line-height:1.04;letter-spacing:-.055em;font-weight:500;max-width:13em}
-.hero h1 .dim{color:var(--dim)}
-.hero-foot{display:grid;grid-template-columns:1fr 1fr 2.2fr;grid-template-rows:auto auto;gap:36px var(--gut);margin-top:56px;align-items:end}
-.slot{grid-column:3;grid-row:1/3;aspect-ratio:16/9}
-.stat b{display:block;font-size:clamp(28px,3vw,44px);font-weight:500;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+/* ---------- 히어로: 오른쪽 아래 카드와 왼쪽 아래 숫자 ---------- */
+.hero{height:300vh;position:relative}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden}
+.h-stats{position:absolute;left:var(--gut);bottom:22px;width:calc(var(--cx) - var(--gut) * 2);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gut);opacity:var(--sto,1)}
+.stat b{display:block;font-size:clamp(28px,3vw,46px);font-weight:500;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
 .stat span{display:block;font-size:12px;color:var(--mute);margin-top:8px;line-height:1.4}
-.film{position:absolute;z-index:20;overflow:hidden;background:#000;will-change:left,top,width,height}
-.film video{width:100%;height:100%;object-fit:cover}
-.film .shade{position:absolute;inset:0;background:#0e0e0e;opacity:0}
-.film .cap{position:absolute;left:12px;bottom:10px;font-size:11px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);transition:opacity .3s}
-.say{position:absolute;left:6%;right:20%;top:50%;transform:translateY(-50%);color:#f1f1ee;font-size:clamp(24px,3.1vw,48px);line-height:1.22;letter-spacing:-.045em;font-weight:500;pointer-events:none}
-.say .w{opacity:.14;transition:opacity .25s}
-.say .w.lit{opacity:1}
-.say-foot{position:absolute;left:6%;right:6%;bottom:6%;display:flex;gap:48px;color:#f1f1ee;opacity:0}
-.say-foot .stat span{color:#9a9a96}
+.h-card{position:absolute;left:calc(var(--cx) + var(--gut));top:calc(var(--cy) + var(--gut));right:var(--gut);bottom:var(--gut);overflow:hidden;background:#fff;opacity:var(--co,1);transform:scale(var(--cs,1));transform-origin:50% 60%}
+.h-card video{width:100%;height:100%;object-fit:cover}
+.h-card figcaption{position:absolute;left:12px;bottom:10px;font-size:11px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.h-say{position:absolute;left:calc(var(--cx) + var(--gut));right:6vw;top:calc(var(--cy) + var(--gut));bottom:var(--gut);display:flex;flex-direction:column;justify-content:center;gap:5vh;opacity:var(--sy,0);pointer-events:none}
+.h-say p{font-size:clamp(24px,3vw,52px);line-height:1.18;letter-spacing:-.045em;font-weight:600}
+.h-say .w{opacity:.18;transition:opacity .25s}
+.h-say .w.lit{opacity:1}
+
+/* ---------- 본문: 왼쪽 칸 너비만큼 비켜 선다 ---------- */
+.main{margin-left:var(--mx);padding:0 var(--gut);min-width:0}
 
 /* ---------- section heads ---------- */
 .sec{padding:140px 0 40px}
@@ -206,11 +220,11 @@ code{font:.92em/1.5 ui-monospace,Consolas,monospace;letter-spacing:0;background:
 
 /* ---------- footer ---------- */
 .foot{background:#111;color:#f1f1ee;padding:140px var(--gut) 24px}
-.foot-top{display:grid;grid-template-columns:var(--rail) 1fr auto;gap:var(--gut);align-items:start}
+.foot-top{display:grid;grid-template-columns:var(--railW) 1fr auto;gap:var(--gut);align-items:start}
 .foot-top h2{font-size:clamp(30px,4.2vw,64px);line-height:1.05;letter-spacing:-.05em;font-weight:500}
 .foot .kicker{color:#8a8a86}
 .foot .btn{background:#f1f1ee;color:#111}
-.foot-cols{display:grid;grid-template-columns:var(--rail) repeat(3,1fr);gap:var(--gut);margin-top:100px;font-size:12px;color:#8a8a86}
+.foot-cols{display:grid;grid-template-columns:var(--railW) repeat(3,1fr);gap:var(--gut);margin-top:100px;font-size:12px;color:#8a8a86}
 .foot-cols h3{font-size:12px;font-weight:500;color:#f1f1ee;margin-bottom:8px}
 .foot-cols a{text-decoration:none}.foot-cols a:hover{color:#f1f1ee}
 .foot-cols li+li{margin-top:2px}
@@ -226,21 +240,36 @@ code{font:.92em/1.5 ui-monospace,Consolas,monospace;letter-spacing:0;background:
 .rv{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s var(--ease)}
 .rv.in{opacity:1;transform:none}
 
-/* ---------- static mode: small screens, reduced motion ---------- */
+
+/* 작업 목록은 헤더 띠 바로 아래에 고정된다 */
+.work .pin{position:sticky;top:var(--cyF);height:calc(100vh - var(--cyF));padding:40px 0 24px;display:flex;flex-direction:column}
+.work .big{margin-bottom:28px}
+.case,.sec{padding-top:110px}
+
+/* ---------- 정적 배치: 좁은 화면, 동작 줄이기 ---------- */
+html.static .vline,html.static .hline,html.static .cross,html.static .side{display:none}
+html.static .band{position:relative;height:auto;padding:16px 16px 0;display:flex;flex-direction:column}
+html.static .mark,html.static .band .cta{position:static}
+html.static .band .cta{position:absolute;top:16px;right:16px}
+html.static .tag,html.static .band nav{display:none}
+html.static .band-left{position:static;width:auto;margin-top:28px}
+html.static .intro{max-height:none;opacity:1}
+html.static .band-head{position:static;opacity:1;transform:none;margin-top:44px;order:1;pointer-events:auto}
+html.static .band-head h1{font-size:clamp(30px,8vw,44px)}
+html.static .band-left{order:2}
 html.static .hero{height:auto}
-html.static .pin{position:static;height:auto}
-html.static .hero .pin{padding-top:110px}
-html.static .film{position:relative;inset:auto!important;width:auto!important;height:auto!important;margin-top:28px;background:transparent;overflow:visible}
-html.static .film video{aspect-ratio:16/9;height:auto}
-html.static .film .cap,html.static .film .shade{display:none}
-html.static .slot{display:none}
-html.static .say{position:static;transform:none;color:var(--fg);padding:60px 0 0;font-size:clamp(22px,6vw,34px)}
-html.static .say .w{opacity:1}
-html.static .say-foot{display:none}
+html.static .stage{position:static;height:auto;overflow:visible;padding:0 16px}
+html.static .h-stats{position:static;width:auto;grid-template-columns:1fr 1fr;row-gap:28px;margin-top:40px;opacity:1}
+html.static .h-card{position:relative;inset:auto;aspect-ratio:16/9;margin-top:32px;opacity:1;transform:none}
+html.static .h-say{position:static;opacity:1;padding:64px 0 0;gap:24px}
+html.static .h-say p{font-size:clamp(22px,6vw,34px)}
+html.static .h-say .w{opacity:1}
+html.static .main{margin-left:0;padding:0 16px}
 html.static .work{height:auto}
-html.static .work .pin{padding-top:140px}
+html.static .work .pin{position:static;height:auto;padding-top:100px}
 html.static .proj-row{padding:16px 0}
 html.static .proj .t{color:var(--fg);transform:none}
+html.static .proj.on .y,html.static .proj .y{opacity:1}
 html.static .more{grid-template-rows:1fr}
 html.static .more-in{opacity:1;transform:none;padding-left:0;max-width:none}
 html.static .thumb{position:relative;opacity:1;transform:none;width:100%;top:0;margin-bottom:18px}
@@ -250,19 +279,12 @@ html.static .shot img,html.static .shot video{transform:none}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
 
 @media (max-width:1100px){
-  :root{--rail:230px}
   .meta{grid-template-columns:repeat(2,1fr);row-gap:14px}
   .step{grid-template-columns:1fr}
   .rp-count{font-size:48px}
 }
 @media (max-width:900px){
   :root{--gut:16px}
-  .bar{grid-template-columns:1fr auto;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);padding:12px 16px}
-  .bar-tag,.bar nav{display:none}
-  .wrap{grid-template-columns:1fr}
-  .rail{display:none}
-  .main{border-left:0;padding-left:0}
-  .hero-foot{grid-template-columns:1fr 1fr;margin-top:36px}
   .media.two,.media.two-eq,.media.three,.media.pick{grid-template-columns:1fr}
   .shot{height:auto;aspect-ratio:16/10}
   .media.pick .shot+.shot{aspect-ratio:3/4}
@@ -283,33 +305,38 @@ html.static .shot img,html.static .shot video{transform:none}
 </head>
 <body>
 
-<header class="bar">
+<div class="vline" aria-hidden="true"></div>
+<div class="hline" aria-hidden="true"></div>
+<div class="cross" aria-hidden="true"></div>
+
+<!-- 위쪽 두 칸 -->
+<header class="band" id="top">
   <a class="mark" href="#top" aria-label="맨 위로">
     <span class="mark-bars" aria-hidden="true"><i></i><i></i><i></i></span>
     <span><b>장효준</b>Hyojoon Jang</span>
   </a>
-  <span class="bar-tag">(Backend · Data · Robotics)<br>2026 Selected Work</span>
-  <nav aria-label="섹션">
-    <a href="#work">Work</a><a href="#awards">Awards</a><a href="#how">How I work</a><a href="#contact">Contact</a>
-  </nav>
+  <p class="tag">(Backend · Data · Robotics)<br>2026 Selected Work</p>
+  <nav aria-label="섹션"><a href="#work">Work</a><a href="#awards">Awards</a><a href="#how">How I work</a><a href="#contact">Contact</a></nav>
   <a class="cta" href="https://github.com/rl2aderjoon" target="_blank" rel="noopener">GitHub ↗</a>
+  <div class="band-left">
+    <div class="btns"><a class="btn" href="#work">대표 작업 보기 ↘</a><a class="btn ghost" href="#contact">연락하기 ↗</a></div>
+    <div class="intro">
+      <p>올해 다섯 개의 프로젝트에서 백엔드, 데이터 파이프라인, 로봇 시스템을 오갔습니다.</p>
+      <p><strong>숫자로 확인하고 고칩니다.</strong> 목표에 닿지 못한 결과와 데이터로 접은 기능도 함께 남깁니다.</p>
+    </div>
+  </div>
+  <div class="band-head"><h1>코드가 실제로 움직이는 흐름을 따라가고, <b>측정한 다음에 고칩니다.</b></h1></div>
 </header>
 
-<div class="wrap" id="top">
-
-  <!-- 왼쪽 영역: 지금 보는 섹션에 따라 내용이 바뀐다 -->
-  <aside class="rail" aria-label="현재 섹션 안내">
-    <div class="stage">
-      <div class="panel on" data-panel="hero">
-        <div class="btns"><a class="btn" href="#work">대표 작업 보기 ↘</a><a class="btn ghost" href="#contact">연락하기 ↗</a></div>
-        <p>올해 다섯 개의 프로젝트에서 <strong>백엔드, 데이터 파이프라인, 로봇 시스템</strong>을 오갔습니다.</p>
-        <p><strong>숫자로 확인하고 고칩니다.</strong> 목표에 닿지 못한 결과와 데이터로 접은 기능도 함께 남깁니다.</p>
-      </div>
-      <div class="panel" data-panel="say">
+<!-- 왼쪽 아래 칸: 지금 보는 섹션에 따라 내용이 바뀐다 -->
+<aside class="side" aria-label="현재 섹션 안내">
+  <div class="side-in">
+    <div class="stage-r">
+      <div class="panel on" data-panel="say">
         <p class="rp-k">지금 하는 일</p>
         <p class="rp-t">로보터블 × SSAFY<br>기업 연계 프로젝트</p>
         <p class="rp-l">조리 영상에서 동작이 바뀌는 지점을 찾아 로봇 학습용 라벨을 싸게 만드는 파이프라인을 연구하고 있습니다.</p>
-        <div class="quote">“한 번 재 보고, 숫자가 가리키는 곳을 고친다.”<span>프로젝트마다 반복한 순서</span></div>
+        <div class="rp-stats"><div><b>1st</b><span>공통 프로젝트 우수상</span></div><div><b>2nd</b><span>특화 프로젝트 우수상</span></div></div>
       </div>
       <div class="panel" data-panel="work">
         <p class="rp-k">Selected work</p>
@@ -358,17 +385,6 @@ html.static .shot img,html.static .shot video{transform:none}
         <div class="prog"><i></i></div>
         <a class="rp-next" href="#awards">다음 · 수상 ↓</a>
       </div>
-      <div class="panel" data-panel="awards">
-        <p class="rp-k">Awards</p>
-        <p class="rp-count">2<small> 회</small></p>
-        <p class="rp-l">SSAFY 공통 프로젝트 우수상 1등(삐용)<br>SSAFY 특화 프로젝트 우수상 2등(가볼래)</p>
-      </div>
-      <div class="panel" data-panel="how">
-        <p class="rp-k">How I work</p>
-        <p class="rp-t">함께 일하기 전에</p>
-        <p class="rp-l">프로젝트 기록에서 반복해서 보이는 일하는 방식을 정리했습니다.</p>
-        <div class="btns" style="margin-top:20px"><a class="btn" href="#contact">연락하기 ↗</a></div>
-      </div>
     </div>
     <nav class="r-index" aria-label="프로젝트 목차">
       <a href="#gabolle" data-for="gabolle"><em>01</em>가볼래</a>
@@ -377,36 +393,30 @@ html.static .shot img,html.static .shot video{transform:none}
       <a href="#axmap" data-for="axmap"><em>04</em>axMap</a>
       <a href="#ui" data-for="ui"><em>05</em>Understand Investment</a>
     </nav>
-  </aside>
+  </div>
+</aside>
 
-  <main class="main">
+<!-- 히어로: 교차점이 왼쪽 위로 움직이며 카드가 커졌다가 사라지고, 그 자리에 설명이 켜진다 -->
+<section class="hero" id="hero" aria-label="소개">
+  <div class="stage">
+    <div class="h-stats">
+      <div class="stat"><b>2</b><span>SSAFY 우수상<br>공통 1등 · 특화 2등</span></div>
+      <div class="stat"><b>5</b><span>2026년에 진행한<br>프로젝트</span></div>
+      <div class="stat"><b>3,562</b><span>팀 저장소에서 쓰인<br>axMap 선점 횟수</span></div>
+      <div class="stat"><b>v1.7</b><span>npm 배포한 개인 도구<br>axmap-cli</span></div>
+    </div>
+    <figure class="h-card">
+      <video src="assets/media/bbiyong-maze-timelapse.mp4" poster="assets/media/bbiyong-maze-poster.jpg" muted loop playsinline autoplay preload="metadata" aria-label="삐용 로봇이 박스 미로를 주행하는 타임랩스"></video>
+      <figcaption>삐용 · 박스 미로 주행 테스트, 약 50분을 29초로</figcaption>
+    </figure>
+    <div class="h-say">
+      <p class="say-a">여행 앱의 추천 서버에서 순찰 로봇의 펌웨어까지, 올해는 분야를 가리지 않았습니다.</p>
+      <p class="say-b">대신 순서는 늘 같았습니다. 먼저 재고, 숫자가 가리키는 곳을 고치고, 닿지 못한 결과도 남깁니다.</p>
+    </div>
+  </div>
+</section>
 
-    <!-- HERO: 스크롤하면 영상이 커지고, 그 위로 설명이 켜진다 -->
-    <section class="hero" id="hero" data-theme="light" data-panel-for="hero" aria-labelledby="hero-title">
-      <div class="pin">
-        <div class="hero-copy">
-          <h1 id="hero-title">코드가 실제로 움직이는 흐름을 따라가고, <span class="dim">측정한 다음에 고칩니다.</span></h1>
-          <div class="hero-foot">
-            <div class="stat"><b>2</b><span>SSAFY 우수상<br>공통 1등 · 특화 2등</span></div>
-            <div class="stat"><b>5</b><span>2026년에 진행한<br>프로젝트</span></div>
-            <div class="stat"><b>3,562</b><span>팀 저장소에서 쓰인<br>axMap 선점 횟수</span></div>
-            <div class="stat"><b>v1.7</b><span>npm 배포한 개인 도구<br>axmap-cli</span></div>
-            <div class="slot" aria-hidden="true"></div>
-          </div>
-        </div>
-        <figure class="film">
-          <video src="assets/media/bbiyong-maze-timelapse.mp4" poster="assets/media/bbiyong-maze-poster.jpg" muted loop playsinline autoplay preload="metadata" aria-label="삐용 로봇이 박스 미로를 주행하는 타임랩스"></video>
-          <div class="shade"></div>
-          <figcaption class="cap">삐용 · 박스 미로 주행 테스트, 약 50분을 29초로</figcaption>
-          <p class="say" id="say">여행 앱의 추천 서버에서 순찰 로봇의 펌웨어까지, 올해는 분야를 가리지 않았습니다. 대신 순서는 늘 같았습니다. 먼저 재고, 숫자가 가리키는 곳을 고치고, 닿지 못한 결과도 남깁니다.</p>
-          <div class="say-foot">
-            <div class="stat"><b>1st</b><span>공통 프로젝트 우수상</span></div>
-            <div class="stat"><b>2nd</b><span>특화 프로젝트 우수상</span></div>
-            <div class="stat"><b>Now</b><span>로보터블 기업 연계</span></div>
-          </div>
-        </figure>
-      </div>
-    </section>
+<main class="main">
 
     <!-- WORK: 스크롤하면 행 간격이 벌어지고 하나씩 펼쳐진다 -->
     <section class="work" id="work" data-theme="dark" data-panel-for="work" aria-labelledby="work-title">
@@ -671,7 +681,7 @@ html.static .shot img,html.static .shot video{transform:none}
     </article>
 
     <!-- AWARDS -->
-    <section class="sec" id="awards" data-theme="light" data-panel-for="awards" aria-labelledby="awards-title">
+    <section class="sec" id="awards" data-theme="light" data-rail="none" data-panel-for="awards" aria-labelledby="awards-title">
       <p class="kicker">Awards</p>
       <h2 id="awards-title" class="big rv">두 번의 발표회, <span class="dim">두 번의 우수상.</span></h2>
       <div class="awards">
@@ -687,7 +697,7 @@ html.static .shot img,html.static .shot video{transform:none}
     </section>
 
     <!-- HOW I WORK -->
-    <section class="sec" id="how" data-theme="light" data-panel-for="how" aria-labelledby="how-title">
+    <section class="sec" id="how" data-theme="light" data-rail="none" data-panel-for="how" aria-labelledby="how-title">
       <p class="kicker">How I work</p>
       <h2 id="how-title" class="big rv">함께 일하기 전에 <span class="dim">물어볼 만한 것들.</span></h2>
       <div class="faq">
@@ -698,10 +708,10 @@ html.static .shot img,html.static .shot video{transform:none}
       </div>
     </section>
 
-  </main>
-</div>
 
-<footer class="foot" id="contact" data-theme="dark">
+</main>
+
+<footer class="foot" id="contact" data-theme="dark" data-rail="none">
   <div class="foot-top">
     <p class="kicker">Contact</p>
     <h2>같이 풀고 싶은 문제가 있다면<br>이야기해 주세요.</h2>
@@ -723,81 +733,113 @@ html.static .shot img,html.static .shot video{transform:none}
 
 <script>
 (() => {
-  const isStatic = () => document.documentElement.classList.contains('static');
+  const root = document.documentElement;
+  const isStatic = () => root.classList.contains('static');
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const ease = t => 1 - Math.pow(1 - t, 3);
+  const inout = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const lerp = (a, b, t) => a + (b - a) * t;
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
+  const css = (k, v) => root.style.setProperty(k, v);
 
-  // 문단을 단어 단위로 나눈다
-  const say = $('#say');
-  say.innerHTML = say.textContent.trim().split(/\s+/).map(w => `<span class="w">${w}</span>`).join(' ');
-  const words = [...say.querySelectorAll('.w')];
+  // 설명 문단을 단어 단위로 나눈다
+  const words = [];
+  $$('.h-say p').forEach(p => {
+    p.innerHTML = p.textContent.trim().split(/\s+/).map(w => `<span class="w">${w}</span>`).join(' ');
+    words.push(...p.querySelectorAll('.w'));
+  });
 
-  const hero = $('#hero'), heroPin = hero.querySelector('.pin'), heroCopy = hero.querySelector('.hero-copy');
-  const slot = hero.querySelector('.slot'), film = hero.querySelector('.film');
-  const shade = film.querySelector('.shade'), cap = film.querySelector('.cap'), sayFoot = film.querySelector('.say-foot');
-  const work = $('#work'), projs = $('#projs'), items = $$('.proj');
+  const hero = $('#hero'), work = $('#work'), projs = $('#projs'), items = $$('.proj');
+  const vline = $('.vline'), cross = $('.cross');
   const wkN = $('#wk-n'), wkName = $('#wk-name'), wkLine = $('#wk-line'), wkProg = $('#wk-prog');
   const panels = new Map($$('.panel').map(p => [p.dataset.panel, p]));
   const zones = $$('[data-theme]');
   const idx = $$('.r-index a');
-  let hover = -1, lastPanel = 'hero';
+  let hover = -1, lastPanel = 'say';
+  let railW = 300, cyF = 132, curX = null;
 
   items.forEach((li, i) => {
-    li.addEventListener('mouseenter', () => { hover = i; frame(); });
-    li.addEventListener('mouseleave', () => { hover = -1; frame(); });
+    li.addEventListener('mouseenter', () => { hover = i; schedule(); });
+    li.addEventListener('mouseleave', () => { hover = -1; schedule(); });
   });
 
-  function progress(el) {
+  function measure() {
+    railW = Math.round(clamp(innerWidth * .22, 280, 380));
+    cyF = 132;
+    css('--railW', railW + 'px');
+    css('--cyF', cyF + 'px');
+  }
+
+  // 고정된 요소가 화면 위 top에 붙어 있는 동안의 진행도
+  function pinProgress(el, top) {
     const r = el.getBoundingClientRect();
-    return clamp(-r.top / (r.height - innerHeight));
+    return clamp((top - r.top) / (r.height - (innerHeight - top)));
   }
 
   function setPanel(name) {
-    if (name === lastPanel) return;
+    if (name === lastPanel || !panels.has(name)) return;
     panels.get(lastPanel)?.classList.remove('on');
-    panels.get(name)?.classList.add('on');
+    panels.get(name).classList.add('on');
     lastPanel = name;
     idx.forEach(a => a.classList.toggle('on', a.dataset.for === name));
   }
 
-  function frame() {
-    const mid = innerHeight * .5;
-    let theme = 'light', panel = 'hero';
+  function zoneAt(y) {
     for (const z of zones) {
       const r = z.getBoundingClientRect();
-      if (r.top <= mid && r.bottom > mid) { theme = z.dataset.theme; panel = z.dataset.panelFor || panel; break; }
+      if (r.top <= y && r.bottom > y) return z;
     }
+    return null;
+  }
+
+  let again = false;
+  function frame() {
+    again = false;
+    const vw = innerWidth, vh = innerHeight, mid = vh * .5;
+    const zone = zoneAt(mid);
+    let theme = zone ? zone.dataset.theme : 'light';
+    let panel = zone ? (zone.dataset.panelFor || lastPanel) : lastPanel;
 
     if (!isStatic()) {
-      // 히어로: 슬롯 크기에서 오른쪽 영역 전체로 커진다
-      const p = progress(hero);
-      const grow = ease(clamp(p / .42));
-      const pr = heroPin.getBoundingClientRect(), sr = slot.getBoundingClientRect();
-      const from = { l: sr.left - pr.left, t: sr.top - pr.top, w: sr.width, h: sr.height };
-      const to = { l: -24 - 1, t: 0, w: innerWidth - pr.left + 25, h: innerHeight };
-      film.style.left = lerp(from.l, to.l, grow) + 'px';
-      film.style.top = lerp(from.t, to.t, grow) + 'px';
-      film.style.width = lerp(from.w, to.w, grow) + 'px';
-      film.style.height = lerp(from.h, to.h, grow) + 'px';
-      heroCopy.style.opacity = 1 - clamp(p / .3);
-      heroCopy.style.transform = `translateY(${-clamp(p / .3) * 60}px)`;
-      shade.style.opacity = clamp((p - .3) / .2) * .72;
-      cap.style.opacity = 1 - clamp((p - .25) / .1);
-      say.style.opacity = clamp((p - .34) / .1);
-      const lit = Math.floor(clamp((p - .45) / .4) * words.length);
-      words.forEach((w, i) => w.classList.toggle('lit', i < lit));
-      sayFoot.style.opacity = clamp((p - .82) / .1);
-      sayFoot.style.transform = `translateY(${(1 - clamp((p - .82) / .1)) * 16}px)`;
-      if (hero.getBoundingClientRect().bottom > mid && hero.getBoundingClientRect().top <= mid) {
-        if (p > .36) theme = 'dark';
-        if (p > .45) panel = 'say';
+      const p = pinProgress(hero, 0);
+      let cx, cy;
+      if (p < 1) {
+        // 교차점이 (55%, 57%)에서 (사이드바 너비, 헤더 띠 높이)로 움직인다
+        const k = inout(clamp(p / .5));
+        cx = lerp(vw * .55, railW, k);
+        cy = lerp(vh * .57, cyF, k);
+        curX = cx;
+        css('--mx', railW + 'px');
+        css('--ik', (1 - clamp(p / .22)).toFixed(3));
+        css('--ho', (1 - clamp((p - .04) / .22)).toFixed(3));
+        css('--sto', (1 - clamp(p / .18)).toFixed(3));
+        const gone = clamp((p - .3) / .14);
+        css('--co', (1 - gone).toFixed(3));
+        css('--cs', (1 - gone * .06).toFixed(3));
+        css('--sy', clamp((p - .44) / .06).toFixed(3));
+        const lit = Math.floor(clamp((p - .5) / .4) * words.length);
+        words.forEach((w, i) => w.classList.toggle('lit', i < lit));
+        css('--so', clamp((p - .4) / .12).toFixed(3));
+        theme = p > .3 ? 'dark' : 'light';
+        panel = 'say';
+      } else {
+        // 히어로 뒤: 섹션이 사이드바를 원하면 열고, 아니면 접는다
+        const want = zone && zone.dataset.rail === 'none' ? 0 : railW;
+        if (curX === null) curX = want;
+        curX += (want - curX) * .14;
+        if (Math.abs(want - curX) < .5) curX = want; else again = true;
+        cx = curX; cy = cyF;
+        css('--mx', cx + 'px');
+        css('--ik', 0); css('--ho', 0); css('--co', 0);
+        css('--so', clamp(cx / railW).toFixed(3));
       }
+      css('--cx', cx + 'px');
+      css('--cy', cy + 'px');
+      vline.style.opacity = cross.style.opacity = clamp(cx / 40);
 
       // 작업 목록: 간격이 벌어지고 한 행씩 펼친다
-      const q = progress(work);
+      const q = pinProgress(work, cyF);
       projs.style.setProperty('--g', ease(clamp(q / .12)).toFixed(3));
       const active = q < .1 ? -1 : Math.min(items.length - 1, Math.floor(clamp((q - .1) / .86) * items.length));
       const show = hover >= 0 ? hover : active;
@@ -818,13 +860,14 @@ html.static .shot img,html.static .shot video{transform:none}
 
     document.body.classList.toggle('night', theme === 'dark');
     setPanel(panel);
+    if (again) schedule();
   }
 
   let ticking = false;
-  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; frame(); }); } };
-  addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', onScroll);
-  frame();
+  function schedule() { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; frame(); }); } }
+  addEventListener('scroll', schedule, { passive: true });
+  addEventListener('resize', () => { measure(); schedule(); });
+  measure(); frame();
 
   // 등장 효과, 숫자 올리기, 막대 차트
   const countUp = el => {
