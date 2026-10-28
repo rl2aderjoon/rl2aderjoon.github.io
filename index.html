@@ -759,8 +759,12 @@ html.static .shot img,html.static .shot video{transform:none}
   let hover = -1, lastPanel = 'say';
   let railW = 300, cyF = 132, curX = null;
 
+  // 스크롤이 시작되면 호버를 놓는다. 브라우저는 스크롤 뒤에도 움직임 0 인 mousemove 를
+  // 만들어 보내므로, 실제로 마우스가 움직였을 때만 호버를 다시 잡는다
   items.forEach((li, i) => {
-    li.addEventListener('mouseenter', () => { hover = i; schedule(); });
+    li.addEventListener('mousemove', e => {
+      if (hover !== i && (e.movementX || e.movementY)) { hover = i; schedule(); }
+    });
     li.addEventListener('mouseleave', () => { hover = -1; schedule(); });
   });
 
@@ -865,7 +869,7 @@ html.static .shot img,html.static .shot video{transform:none}
 
   let ticking = false;
   function schedule() { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; frame(); }); } }
-  addEventListener('scroll', schedule, { passive: true });
+  addEventListener('scroll', () => { hover = -1; schedule(); }, { passive: true });
   addEventListener('resize', () => { measure(); schedule(); });
   measure(); frame();
 
