@@ -1,0 +1,12 @@
+{
+  "agent": "janghyojoon",
+  "task": "resume-review",
+  "intent": "Claude Code와 이력서 피드백을 axMap 쪽지로 교환",
+  "actor": null,
+  "session": null,
+  "since": "2026-10-31T11:01:48.352Z",
+  "ttlMs": 900000,
+  "paths": [
+    "docs/bus"
+  ]
+}
