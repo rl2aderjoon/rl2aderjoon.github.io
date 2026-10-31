@@ -1,0 +1,12 @@
+{
+  "agent": "janghyojoon",
+  "task": "toss-resume-review",
+  "intent": "이력서 문맥·수치·측정 환경 표기를 검토하고 증거가 확인되는 표현만 개선",
+  "actor": "agent",
+  "session": "mcp-28848",
+  "since": "2026-10-31T11:56:04.909Z",
+  "ttlMs": 2700000,
+  "paths": [
+    "_design/toss-resume.html"
+  ]
+}
