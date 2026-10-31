@@ -1,0 +1,12 @@
+{
+  "agent": "janghyojoon",
+  "task": null,
+  "intent": "Claude's final review follow-up: remove unsupported feed claim and clarify recall comparison after Claude session token limit; inspect one authorized HTML file.",
+  "actor": "agent",
+  "session": "mcp-28848",
+  "since": "2026-10-31T12:21:30.804Z",
+  "ttlMs": 2700000,
+  "paths": [
+    "_design/toss-resume.html"
+  ]
+}
