@@ -1,0 +1,171 @@
+html.mobile-intro-pending,
+html.mobile-intro-pending body {
+  background: #111110;
+}
+html.mobile-intro-pending body > :not(.mobile-intro) {
+  visibility: hidden;
+}
+html.mobile-intro-open {
+  overflow: hidden;
+}
+html.mobile-intro-seen .h-stats {
+  display: none;
+}
+.mobile-intro:not([open]) {
+  display: none;
+}
+.mobile-intro[open] {
+  --intro-gutter: clamp(18px, 6vw, 34px);
+  --intro-rule: #58584f;
+  --intro-ink: #f5f5ed;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100vh;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  background: #111110;
+  color: var(--intro-ink);
+  touch-action: pinch-zoom;
+  overscroll-behavior: contain;
+  font-family: inherit;
+}
+.mobile-intro::backdrop {
+  background: transparent;
+}
+.mobile-intro[data-closing] {
+  pointer-events: none;
+  animation: mobile-intro-exit 275ms cubic-bezier(.45, 0, .3, 1) both;
+}
+@keyframes mobile-intro-exit {
+  to { transform: translateY(-100%); }
+}
+.mobile-intro__bar, .mobile-intro__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 11px;
+  width: min(100%, 520px);
+  margin-inline: auto;
+  padding-inline: var(--intro-gutter);
+}
+.mobile-intro__bar {
+  padding-top: max(12px, env(safe-area-inset-top));
+}
+.mobile-intro__title {
+  font-size: 12px;
+  font-weight: 670;
+  letter-spacing: .065em;
+}
+.mobile-intro__title:focus {
+  outline: none;
+}
+.mobile-intro__body {
+  width: min(100%, 520px);
+  margin-inline: auto;
+  padding: clamp(10px, 8dvh, 85px) var(--intro-gutter) 0;
+  min-height: 0;
+}
+.mobile-intro__caption {
+  margin: 0 0 clamp(9px, 2.1dvh, 23px);
+  color: #b8b8aa;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .09em;
+}
+.mobile-intro__metrics {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mobile-intro__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(79px, 30%);
+  align-items: baseline;
+  gap: 10px;
+  padding: clamp(7px, 1.7dvh, 18px) 0;
+  border-top: 1px solid var(--intro-rule);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 245ms ease-out;
+}
+.mobile-intro__row:last-child {
+  border-bottom: 1px solid var(--intro-rule);
+}
+.mobile-intro__row[data-state] {
+  visibility: visible;
+}
+.mobile-intro__row[data-state="past"] {
+  opacity: .34;
+}
+.mobile-intro__row[data-state="current"] {
+  opacity: 1;
+}
+.mobile-intro__row strong {
+  font-size: clamp(30px, min(13.4vw, 8.4dvh), 68px);
+  line-height: .99;
+  letter-spacing: -.075em;
+  font-weight: 725;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.mobile-intro__row span {
+  font-size: clamp(11px, 3.45vw, 14px);
+  line-height: 1.32;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.mobile-intro__footer {
+  padding-bottom: max(11px, env(safe-area-inset-bottom));
+}
+.mobile-intro__count {
+  color: #d2d2c5;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.mobile-intro__progress {
+  display: flex;
+  flex: 1;
+  max-width: 110px;
+  gap: 4px;
+}
+.mobile-intro__progress i {
+  height: 2px;
+  flex: 1;
+  background: #5c5c51;
+}
+.mobile-intro__progress .current {
+  background: var(--intro-ink);
+}
+.mobile-intro button {
+  min-height: 44px;
+  border: 1px solid var(--intro-rule);
+  border-radius: 22px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--intro-ink);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 550;
+  cursor: pointer;
+}
+.mobile-intro button:focus-visible {
+  outline: 2px solid #ff815b;
+  outline-offset: 3px;
+}
+@media (max-height: 420px) {
+  .mobile-intro__body { padding-top: 7px; }
+  .mobile-intro__caption { margin-bottom: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-intro[data-closing] { animation: none; }
+  .mobile-intro__row { transition: none; }
+}

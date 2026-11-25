@@ -9,6 +9,8 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%23121212%22/%3E%3Crect x=%226%22 y=%228%22 width=%2220%22 height=%224%22 fill=%22%23fff%22/%3E%3Crect x=%226%22 y=%2214%22 width=%2214%22 height=%224%22 fill=%22%23fff%22/%3E%3Crect x=%226%22 y=%2220%22 width=%2220%22 height=%224%22 fill=%22%23fff%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="./mobile-intro.css" media="(max-width: 900px)">
+<script defer src="./mobile-intro.js"></script>
 <style>
 :root{
   --bg:#e8e8e6; --bg-2:#f2f2f0; --card:#fff; --fg:#121212; --fg-2:#3a3a38; --mute:#7c7c78; --line:#c9c9c5; --dim:#a3a3a0; --ghost:#cdcdc9;
@@ -100,7 +102,6 @@ code{font:.92em/1.5 ui-monospace,Consolas,monospace;letter-spacing:0;background:
 .stat span{display:block;font-size:12px;color:var(--mute);margin-top:8px;line-height:1.4}
 .h-card{position:absolute;left:calc(var(--cx) + var(--gut));top:calc(var(--cy) + var(--gut));right:var(--gut);bottom:var(--gut);overflow:hidden;background:#fff;opacity:var(--co,1);transform:scale(var(--cs,1));transform-origin:50% 60%}
 .h-card video{width:100%;height:100%;object-fit:cover}
-.h-card figcaption{position:absolute;left:12px;bottom:10px;font-size:11px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
 .h-say{position:absolute;left:calc(var(--cx) + var(--gut));right:6vw;top:calc(var(--cy) + var(--gut));bottom:var(--gut);display:flex;flex-direction:column;justify-content:center;gap:5vh;opacity:var(--sy,0);pointer-events:none}
 .h-say p{font-size:clamp(24px,3vw,52px);line-height:1.18;letter-spacing:-.045em;font-weight:600}
 .h-say .w{opacity:.18;transition:opacity .25s}
@@ -356,9 +357,30 @@ html.static .shot img,html.static .shot video{transform:none}
 </style>
 <script>
   if (matchMedia('(max-width:900px), (prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('static');
+  if (matchMedia('(max-width: 900px)').matches && !location.hash && 'HTMLDialogElement' in window) {
+    const root = document.documentElement;
+    root.classList.add('mobile-intro-pending');
+    setTimeout(() => root.classList.remove('mobile-intro-pending'), 1000);
+  }
 </script>
 </head>
 <body>
+
+<dialog class="mobile-intro" aria-labelledby="mobile-intro-title">
+  <div class="mobile-intro__bar">
+    <h2 class="mobile-intro__title" id="mobile-intro-title" tabindex="-1" autofocus>JANG HYOJOON</h2>
+    <button type="button" class="mobile-intro__skip">건너뛰기</button>
+  </div>
+  <div class="mobile-intro__body">
+    <p class="mobile-intro__caption">SELECTED WORK / 2026</p>
+    <ol class="mobile-intro__metrics" aria-label="주요 지표"></ol>
+  </div>
+  <div class="mobile-intro__footer">
+    <span class="mobile-intro__count" aria-live="polite"></span>
+    <span class="mobile-intro__progress" aria-hidden="true"></span>
+    <button type="button" class="mobile-intro__next">다음 ↓</button>
+  </div>
+</dialog>
 
 <div class="vline" aria-hidden="true"></div>
 <div class="hline" aria-hidden="true"></div>
@@ -380,7 +402,7 @@ html.static .shot img,html.static .shot video{transform:none}
       <p><strong>숫자로 확인하고 고칩니다.</strong> 목표에 닿지 못한 결과와 데이터로 접은 기능도 함께 남깁니다.</p>
     </div>
   </div>
-  <div class="band-head"><h1>코드가 실제로 움직이는 흐름을 따라가고, <b>측정한 다음에 고칩니다.</b></h1></div>
+  <div class="band-head"><h1><b>필요에 의한 기술의 적용</b></h1></div>
 </header>
 
 <!-- 왼쪽 아래 칸: 지금 보는 섹션에 따라 내용이 바뀐다 -->
@@ -455,15 +477,14 @@ html.static .shot img,html.static .shot video{transform:none}
 <section class="hero" id="hero" aria-label="소개">
   <div class="stage">
     <div class="h-stats">
-      <div class="stat"><b>24,000+</b><span>npm 누적 다운로드<br>axmap-cli</span></div>
+      <div class="stat"><b>24,000+</b><span>npm 누적 다운로드</span></div>
       <div class="stat"><b>3,562</b><span>팀 저장소에서 쓰인<br>axMap 선점 횟수</span></div>
       <div class="stat"><b>$19,700</b><span>Claude 사용량을<br>API 정가로 환산</span></div>
-      <div class="stat"><b>350억+</b><span>최근 3개월 AI 토큰 사용량<br>Claude Code · Codex</span></div>
+      <div class="stat"><b>350억+</b><span>최근 3개월 AI 토큰 사용량</span></div>
     </div>
     <figure class="h-card">
       <video src="./assets/media/bbiyong-maze-timelapse.mp4" poster="./assets/media/bbiyong-maze-poster.jpg" muted loop playsinline autoplay preload="metadata" aria-label="삐용 로봇이 박스 미로를 주행하는 타임랩스"></video>
-      <figcaption>삐용 · 박스 미로 주행 테스트, 약 50분을 29초로</figcaption>
-    </figure>
+      </figure>
     <div class="h-say">
       <p class="say-a">여행 앱의 추천 서버에서 순찰 로봇의 펌웨어까지, 올해는 분야를 가리지 않았습니다.</p>
       <p class="say-b">대신 순서는 늘 같았습니다. 먼저 재고, 숫자가 가리키는 곳을 고치고, 닿지 못한 결과도 남깁니다.</p>
