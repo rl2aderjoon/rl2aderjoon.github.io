@@ -164,8 +164,7 @@ html[data-intro-transition] .cross::before,html[data-intro-transition] .cross::a
 .proj .n{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}
 .proj .t{font-size:clamp(20px,2vw,28px);font-weight:500;letter-spacing:-.04em;color:var(--mute);transition:color .4s,transform .6s var(--ease);display:inline-block;transform-origin:left}
 .proj .y{font-size:12px;color:var(--mute);font-variant-numeric:tabular-nums}
-.proj.on .t,.proj:hover .t{color:var(--fg)}
-.proj.on .t{transform:translateX(10px)}
+.proj.on .t{color:var(--fg);transform:translateX(10px)}
 .more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
 .more>div{overflow:hidden;min-height:0}
 .proj.on .more{grid-template-rows:1fr}
@@ -967,18 +966,9 @@ html.static .shot img,html.static .shot video{transform:none}
   const panels = new Map($$('.panel').map(p => [p.dataset.panel, p]));
   const zones = $$('[data-theme]');
   const idx = $$('.r-index a');
-  let hover = -1, lastPanel = 'say', lastProject = -1;
+  let lastPanel = 'say', lastProject = -1;
   let railW = 300, cyF = 132, curX = null;
   let previewVisible = true;
-
-  // 스크롤이 시작되면 호버를 놓는다. 브라우저는 스크롤 뒤에도 움직임 0 인 mousemove 를
-  // 만들어 보내므로, 실제로 마우스가 움직였을 때만 호버를 다시 잡는다
-  items.forEach((li, i) => {
-    li.addEventListener('mousemove', e => {
-      if (hover !== i && (e.movementX || e.movementY)) { hover = i; schedule(); }
-    });
-    li.addEventListener('mouseleave', () => { hover = -1; schedule(); });
-  });
 
   function measure() {
     railW = Math.round(clamp(innerWidth * .22, 280, 380));
@@ -1069,15 +1059,14 @@ html.static .shot img,html.static .shot video{transform:none}
       // 작업 목록: 간격이 벌어지고 한 행씩 펼친다
       css(projs, '--g', ease(clamp(q / .12)).toFixed(3));
       const active = q < .1 ? -1 : Math.min(items.length - 1, Math.floor(clamp((q - .1) / .86) * items.length));
-      const show = hover >= 0 ? hover : active;
-      if (show !== lastProject) {
+      if (active !== lastProject) {
         items[lastProject]?.classList.remove('on');
-        const cur = items[show];
+        const cur = items[active];
         cur?.classList.add('on');
-        wkN.textContent = show < 0 ? '00' : String(show + 1).padStart(2, '0');
+        wkN.textContent = active < 0 ? '00' : String(active + 1).padStart(2, '0');
         wkName.textContent = cur ? cur.dataset.name : '다섯 개의 프로젝트';
         wkLine.textContent = cur ? cur.dataset.line : '스크롤하면 하나씩 펼쳐집니다.';
-        lastProject = show;
+        lastProject = active;
       }
       css(wkProg, 'width', (q * 100) + '%');
     }
@@ -1212,7 +1201,6 @@ html.static .shot img,html.static .shot video{transform:none}
     }
   }, { passive: false });
   addEventListener('scroll', () => {
-    hover = -1;
     if (!sceneScrollFrame) schedule();
   }, { passive: true });
   addEventListener('resize', () => { measure(); schedule(); });
