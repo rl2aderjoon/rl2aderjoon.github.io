@@ -43,7 +43,7 @@ code{font:.92em/1.5 ui-monospace,Consolas,monospace;letter-spacing:0;background:
 .cross::after{top:11px;left:0;height:1px;width:23px}
 
 /* ---------- 위쪽 두 칸: 헤더 띠 ---------- */
-.band{position:fixed;inset:0 0 auto 0;height:var(--cy);z-index:50;background:var(--bg);transition:background-color .7s;font-size:12px;line-height:1.35}
+.band{position:fixed;inset:0 0 auto 0;height:var(--cy);z-index:50;contain:layout;background:var(--bg);transition:background-color .7s;font-size:12px;line-height:1.35}
 .mark{position:absolute;left:var(--gut);top:16px;display:flex;gap:10px;align-items:flex-start;align-self:flex-start;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
 .mark-bars{display:grid;gap:3px;padding-top:2px}
 .mark-bars i{display:block;height:4px;background:currentColor}
@@ -81,7 +81,7 @@ html:has(.site-menu[open]){overflow:hidden}
 .btn.ghost{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 1px var(--line)}
 
 /* ---------- 왼쪽 아래 칸: 사이드바 ---------- */
-.side{position:fixed;left:0;top:var(--cy);bottom:0;width:var(--cx);z-index:40;overflow:hidden;opacity:var(--so,0)}
+.side{position:fixed;left:0;top:var(--cy);bottom:0;width:var(--cx);z-index:40;contain:layout;overflow:hidden;opacity:var(--so,0)}
 .side-in{width:var(--railW);height:100%;padding:26px var(--gut) 22px;display:flex;flex-direction:column;font-size:13px;color:var(--fg-2)}
 .stage-r{position:relative;flex:1}
 .panel{position:absolute;inset:0 0 auto 0;opacity:0;transform:translateY(18px);pointer-events:none;transition:opacity .5s ease,transform .7s var(--ease)}
@@ -113,16 +113,34 @@ html:has(.site-menu[open]){overflow:hidden}
 
 /* ---------- 히어로: 오른쪽 아래 카드와 왼쪽 아래 숫자 ---------- */
 .hero{height:220vh;position:relative}
-.stage{position:sticky;top:0;height:100vh;overflow:hidden}
+.stage{position:sticky;top:0;height:100vh;contain:layout;overflow:hidden}
 .h-stats{position:absolute;left:var(--gut);bottom:22px;width:calc(var(--cx) - var(--gut) * 2);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gut);opacity:var(--sto,1)}
 .stat b{display:block;font-size:clamp(28px,3vw,46px);font-weight:500;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
 .stat span{display:block;font-size:12px;color:var(--mute);margin-top:8px;line-height:1.4}
 .h-card{position:absolute;left:calc(var(--cx) + var(--gut));top:calc(var(--cy) + var(--gut));right:var(--gut);bottom:var(--gut);overflow:hidden;background:#fff;opacity:var(--co,1);transform:scale(var(--cs,1));transform-origin:50% 60%}
 .h-card video{width:100%;height:100%;object-fit:cover}
 .h-say{position:absolute;left:calc(var(--cx) + var(--gut));right:6vw;top:calc(var(--cy) + var(--gut));bottom:var(--gut);display:flex;flex-direction:column;justify-content:center;gap:5vh;opacity:var(--sy,0);pointer-events:none}
+html:not(.static) .h-say:not([data-visible]){visibility:hidden;content-visibility:hidden}
 .h-say p{font-size:clamp(24px,3vw,52px);line-height:1.18;letter-spacing:-.045em;font-weight:600}
 .h-say .w{opacity:.18;transition:opacity .36s}
 .h-say[data-revealed] .w{opacity:1;transition-delay:var(--reveal-delay)}
+
+/* 스크롤로 시작한 소개 전환은 두 화면을 캡처해 합성 단계에서 움직인다. */
+html[data-intro-transition] .vline{view-transition-name:intro-vline}
+html[data-intro-transition] .hline{view-transition-name:intro-hline}
+html[data-intro-transition] .cross{view-transition-name:intro-cross}
+html[data-intro-transition] .tag{view-transition-name:intro-tag}
+html[data-intro-transition] .h-say{view-transition-name:intro-copy}
+html[data-intro-transition] :is(body,.band,.band nav a,.btn,.vline,.hline),
+html[data-intro-transition] .cross::before,html[data-intro-transition] .cross::after{transition:none}
+::view-transition{pointer-events:none}
+::view-transition-group(*){animation:none}
+::view-transition-old(*),::view-transition-new(*){animation-duration:3s}
+::view-transition-image-pair(intro-vline){animation:intro-shift 3s cubic-bezier(.42,0,.58,1) both;--intro-offset:var(--intro-shift-x) 0px}
+::view-transition-image-pair(intro-hline){animation:intro-shift 3s cubic-bezier(.42,0,.58,1) both;--intro-offset:0px var(--intro-shift-y)}
+::view-transition-image-pair(intro-cross){animation:intro-shift 3s cubic-bezier(.42,0,.58,1) both;--intro-offset:var(--intro-shift-x) var(--intro-shift-y)}
+::view-transition-image-pair(intro-tag){animation:intro-shift 3s cubic-bezier(.42,0,.58,1) both;--intro-offset:var(--intro-shift-tag) 0px}
+@keyframes intro-shift{from{translate:var(--intro-offset)}to{translate:0px 0px}}
 
 /* ---------- 본문: 왼쪽 칸 너비만큼 비켜 선다 ---------- */
 .main{margin-left:var(--mx);padding:0 var(--gut);min-width:0}
@@ -940,9 +958,9 @@ html.static .shot img,html.static .shot video{transform:none}
   const hero = $('#hero'), work = $('#work'), projs = $('#projs'), items = $$('.proj');
   const band = $('.band'), stage = $('.stage'), side = $('.side'), main = $('.main'), say = $('.h-say');
   const previewVideo = $('.h-card video');
-  const vline = $('.vline'), cross = $('.cross');
+  const vline = $('.vline'), hline = $('.hline'), cross = $('.cross');
   const horizontalPositions = [band, stage, side, vline, cross];
-  const verticalPositions = [band, stage, side, $('.hline'), cross];
+  const verticalPositions = [band, stage, side, hline, cross];
   const wkN = $('#wk-n'), wkName = $('#wk-name'), wkLine = $('#wk-line'), wkProg = $('#wk-prog');
   const panels = new Map($$('.panel').map(p => [p.dataset.panel, p]));
   const zones = $$('[data-theme]');
@@ -1001,6 +1019,7 @@ html.static .shot img,html.static .shot video{transform:none}
       const p = pinProgress(hero.getBoundingClientRect(), 0);
       const q = pinProgress(work.getBoundingClientRect(), cyF);
       let cx, cy;
+      say.toggleAttribute('data-visible', p >= .44 && p < 1);
       const showPreview = p < .44;
       if (showPreview !== previewVisible) {
         previewVisible = showPreview;
@@ -1008,7 +1027,7 @@ html.static .shot img,html.static .shot video{transform:none}
         else previewVideo.pause();
       }
       if (p < .82 || p >= 1) say.toggleAttribute('data-revealed', false);
-      else if (p >= .9 && !introScrollFrame) say.toggleAttribute('data-revealed', true);
+      else if (p >= .9 && !introScrollFrame && !introViewTransition) say.toggleAttribute('data-revealed', true);
       if (p < 1) {
         // 교차점이 (55%, 57%)에서 (사이드바 너비, 헤더 띠 높이)로 움직인다
         const k = inout(clamp(p / .5));
@@ -1074,9 +1093,37 @@ html.static .shot img,html.static .shot video{transform:none}
   let lastWheelAt = -Infinity, wheelDistance = 0, consumedWheel = false;
   let scrollTarget = null, scrollDeadline = 0;
   let introScrollFrame = 0, introScrollHoldUntil = 0;
+  let introViewTransition = null;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
   function playIntroScroll(destination) {
+    if (typeof document.startViewTransition === 'function') {
+      const endsAtTop = destination === 0;
+      const ox = vline.getBoundingClientRect().left;
+      const oy = hline.getBoundingClientRect().top;
+      const tx = endsAtTop ? innerWidth * .55 : railW;
+      const ty = endsAtTop ? innerHeight * .57 : cyF;
+      const gutter = parseFloat(getComputedStyle(root).getPropertyValue('--gut'));
+      css(root, '--intro-shift-x', (ox - tx) + 'px');
+      css(root, '--intro-shift-y', (oy - ty) + 'px');
+      css(root, '--intro-shift-tag', (Math.max(ox + gutter, 340) - Math.max(tx + gutter, 340)) + 'px');
+      root.setAttribute('data-intro-transition', '');
+      const transition = document.startViewTransition(() => {
+        if (introViewTransition !== transition) return;
+        window.scrollTo({ top: destination, behavior: 'instant' });
+        frame();
+      });
+      introViewTransition = transition;
+      const finish = () => {
+        if (introViewTransition !== transition) return;
+        introViewTransition = null;
+        root.removeAttribute('data-intro-transition');
+        introScrollHoldUntil = performance.now() + 220;
+        frame();
+      };
+      transition.finished.then(finish, finish);
+      return;
+    }
     const origin = scrollY;
     const start = performance.now();
     function advance(now) {
@@ -1094,7 +1141,13 @@ html.static .shot img,html.static .shot video{transform:none}
   }
 
   function cancelIntroScroll() {
-    if (!introScrollFrame && performance.now() >= introScrollHoldUntil) return;
+    if (!introViewTransition && !introScrollFrame && performance.now() >= introScrollHoldUntil) return;
+    const transition = introViewTransition;
+    introViewTransition = null;
+    if (transition) {
+      transition.skipTransition();
+      root.removeAttribute('data-intro-transition');
+    }
     cancelAnimationFrame(introScrollFrame);
     introScrollFrame = 0;
     introScrollHoldUntil = 0;
@@ -1119,7 +1172,7 @@ html.static .shot img,html.static .shot video{transform:none}
       consumedWheel = false;
     }
     if (scrollTarget !== null && (now >= scrollDeadline || Math.abs(scrollY - scrollTarget) < 2)) scrollTarget = null;
-    if (introScrollFrame || now < introScrollHoldUntil || scrollTarget !== null || consumedWheel) {
+    if (introViewTransition || introScrollFrame || now < introScrollHoldUntil || scrollTarget !== null || consumedWheel) {
       lastWheelAt = now;
       consumedWheel = true;
       event.preventDefault();
