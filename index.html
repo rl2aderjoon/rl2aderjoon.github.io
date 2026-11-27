@@ -112,7 +112,7 @@ html:has(.site-menu[open]){overflow:hidden}
 .r-index a:hover{color:var(--fg)}
 
 /* ---------- 히어로: 오른쪽 아래 카드와 왼쪽 아래 숫자 ---------- */
-.hero{height:300vh;position:relative}
+.hero{height:220vh;position:relative}
 .stage{position:sticky;top:0;height:100vh;overflow:hidden}
 .h-stats{position:absolute;left:var(--gut);bottom:22px;width:calc(var(--cx) - var(--gut) * 2);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gut);opacity:var(--sto,1)}
 .stat b{display:block;font-size:clamp(28px,3vw,46px);font-weight:500;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
@@ -135,7 +135,7 @@ html:has(.site-menu[open]){overflow:hidden}
 .big .dim{color:var(--dim)}
 
 /* ---------- work list (pinned) ---------- */
-.work{height:460vh;position:relative}
+.work{height:220vh;position:relative}
 .work .pin{padding:110px 0 30px;display:flex;flex-direction:column}
 .work .big{margin-bottom:34px}
 .projs{--g:0;border-top:1px solid var(--line)}
@@ -463,7 +463,7 @@ html.static .shot img,html.static .shot video{transform:none}
         <p class="rp-k">Selected work</p>
         <p class="rp-count"><span id="wk-n">00</span><small> / 05</small></p>
         <p class="rp-t" id="wk-name">다섯 개의 프로젝트</p>
-        <p class="rp-l" id="wk-line">스크롤하면 하나씩 펼쳐집니다.</p>
+        <p class="rp-l" id="wk-line">프로젝트를 선택해 자세히 볼 수 있습니다.</p>
         <div class="prog"><i id="wk-prog"></i></div>
       </div>
       <div class="panel" data-panel="bbiyong">
@@ -936,8 +936,9 @@ html.static .shot img,html.static .shot video{transform:none}
   const wkN = $('#wk-n'), wkName = $('#wk-name'), wkLine = $('#wk-line'), wkProg = $('#wk-prog');
   const panels = new Map($$('.panel').map(p => [p.dataset.panel, p]));
   const zones = $$('[data-theme]');
+  const firstCase = $('.case');
   const idx = $$('.r-index a');
-  let hover = -1, lastPanel = 'say';
+  let hover = -1, lastPanel = 'say', lastProject = -1;
   let railW = 300, cyF = 132, curX = null;
 
   // 스크롤이 시작되면 호버를 놓는다. 브라우저는 스크롤 뒤에도 움직임 0 인 mousemove 를
@@ -957,8 +958,7 @@ html.static .shot img,html.static .shot video{transform:none}
   }
 
   // 고정된 요소가 화면 위 top에 붙어 있는 동안의 진행도
-  function pinProgress(el, top) {
-    const r = el.getBoundingClientRect();
+  function pinProgress(r, top) {
     return clamp((top - r.top) / (r.height - (innerHeight - top)));
   }
 
@@ -983,11 +983,13 @@ html.static .shot img,html.static .shot video{transform:none}
     again = false;
     const vw = innerWidth, vh = innerHeight, mid = vh * .5;
     const zone = zoneAt(mid);
+    const caseRect = zone?.classList.contains('case') ? zone.getBoundingClientRect() : null;
     let theme = zone ? zone.dataset.theme : 'light';
     let panel = zone ? (zone.dataset.panelFor || lastPanel) : lastPanel;
 
     if (!isStatic()) {
-      const p = pinProgress(hero, 0);
+      const p = pinProgress(hero.getBoundingClientRect(), 0);
+      const q = pinProgress(work.getBoundingClientRect(), cyF);
       let cx, cy;
       if (p < 1) {
         // 교차점이 (55%, 57%)에서 (사이드바 너비, 헤더 띠 높이)로 움직인다
@@ -1024,23 +1026,25 @@ html.static .shot img,html.static .shot video{transform:none}
       vline.style.opacity = cross.style.opacity = clamp(cx / 40);
 
       // 작업 목록: 간격이 벌어지고 한 행씩 펼친다
-      const q = pinProgress(work, cyF);
       projs.style.setProperty('--g', ease(clamp(q / .12)).toFixed(3));
       const active = q < .1 ? -1 : Math.min(items.length - 1, Math.floor(clamp((q - .1) / .86) * items.length));
       const show = hover >= 0 ? hover : active;
-      items.forEach((li, i) => li.classList.toggle('on', i === show));
-      const cur = items[show];
-      wkN.textContent = show < 0 ? '00' : String(show + 1).padStart(2, '0');
-      wkName.textContent = cur ? cur.dataset.name : '다섯 개의 프로젝트';
-      wkLine.textContent = cur ? cur.dataset.line : '스크롤하면 하나씩 펼쳐집니다.';
+      if (show !== lastProject) {
+        items[lastProject]?.classList.remove('on');
+        const cur = items[show];
+        cur?.classList.add('on');
+        wkN.textContent = show < 0 ? '00' : String(show + 1).padStart(2, '0');
+        wkName.textContent = cur ? cur.dataset.name : '다섯 개의 프로젝트';
+        wkLine.textContent = cur ? cur.dataset.line : '프로젝트를 선택해 자세히 볼 수 있습니다.';
+        lastProject = show;
+      }
       wkProg.style.width = (q * 100) + '%';
     }
 
     // 사례마다 읽은 만큼 왼쪽 막대가 찬다
-    for (const c of $$('.case')) {
-      const r = c.getBoundingClientRect();
-      const bar = panels.get(c.id)?.querySelector('.prog i');
-      if (bar) bar.style.width = clamp((mid - r.top) / r.height) * 100 + '%';
+    if (caseRect) {
+      const bar = panels.get(zone.id)?.querySelector('.prog i');
+      if (bar) bar.style.width = clamp((mid - caseRect.top) / caseRect.height) * 100 + '%';
     }
 
     document.body.classList.toggle('night', theme === 'dark');
@@ -1050,6 +1054,49 @@ html.static .shot img,html.static .shot video{transform:none}
 
   let ticking = false;
   function schedule() { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; frame(); }); } }
+  let lastWheelAt = -Infinity, wheelDistance = 0, consumedWheel = false;
+  let scrollTarget = null, scrollDeadline = 0;
+  addEventListener('wheel', event => {
+    if (isStatic() || menu.open || !event.cancelable || event.ctrlKey || event.shiftKey ||
+        !event.deltaY || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+
+    const now = performance.now();
+    if (now - lastWheelAt > 160) {
+      wheelDistance = 0;
+      consumedWheel = false;
+    }
+    if (scrollTarget !== null && (now >= scrollDeadline || Math.abs(scrollY - scrollTarget) < 2)) scrollTarget = null;
+    if (scrollTarget !== null || consumedWheel) {
+      lastWheelAt = now;
+      event.preventDefault();
+      return;
+    }
+
+    const direction = Math.sign(event.deltaY);
+    const firstCaseTop = scrollY + firstCase.getBoundingClientRect().top - cyF;
+    if (scrollY > firstCaseTop + 2 || (direction > 0 && scrollY >= firstCaseTop - 2)) return;
+    const heroRect = hero.getBoundingClientRect();
+    const stops = [
+      0,
+      scrollY + heroRect.top + (heroRect.height - innerHeight) * .91,
+      scrollY + work.getBoundingClientRect().top - cyF,
+      firstCaseTop,
+    ];
+    const destination = direction > 0
+      ? stops.find(stop => stop > scrollY + 2)
+      : stops.findLast(stop => stop < scrollY - 2);
+    if (destination === undefined) return;
+
+    event.preventDefault();
+    lastWheelAt = now;
+    const pixels = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaMode === 2 ? event.deltaY * innerHeight : event.deltaY;
+    wheelDistance = Math.sign(wheelDistance) === direction ? wheelDistance + pixels : pixels;
+    if (Math.abs(wheelDistance) < 18) return;
+    consumedWheel = true;
+    scrollTarget = destination;
+    scrollDeadline = now + 1200;
+    window.scrollTo({ top: destination, behavior: 'smooth' });
+  }, { passive: false });
   addEventListener('scroll', () => { hover = -1; schedule(); }, { passive: true });
   addEventListener('resize', () => { measure(); schedule(); });
   measure(); frame();
