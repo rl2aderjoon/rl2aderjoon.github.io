@@ -205,6 +205,14 @@ html:not(.static) .band-left{opacity:var(--actions-opacity,1)}
 .stats .stat b{font-size:clamp(34px,4.2vw,64px)}
 .stats .stat span{font-size:13px;color:var(--fg-2);max-width:20em}
 .stats .stat small{display:block;font-size:11px;color:var(--mute);margin-top:4px}
+#patrol-performance{scroll-margin-top:var(--cyF)}
+#patrol-performance h3{font-size:16px;font-weight:500;margin:0 0 8px}
+#patrol-performance svg{display:block;width:100%;max-width:360px;margin:12px 0}
+#patrol-performance svg text{font-family:inherit;font-size:11px}
+#patrol-performance p{font-size:13px;color:var(--fg-2)}
+.patrol-controls{display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--line);padding-top:14px;margin-top:24px}
+.patrol-controls button{font:inherit;font-size:13px;background:var(--bg);color:var(--fg);border:1px solid var(--line);padding:8px 13px;cursor:pointer}
+.patrol-controls button[aria-pressed=true]{background:var(--fg);color:var(--bg)}
 .story{display:grid;grid-template-columns:1fr 2.2fr;gap:var(--gut);margin-top:72px;padding-top:18px;border-top:1px solid var(--line)}
 .story>h3{font-size:13px;font-weight:500;color:var(--mute)}
 .step{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--gut);padding:18px 0;border-bottom:1px solid var(--line);font-size:13px;line-height:1.6;color:var(--fg-2)}
@@ -617,11 +625,21 @@ html.static .shot img,html.static .shot video{transform:none}
         <figure class="shot"><img src="./assets/media/bbiyong-orincar_assembled.jpg" alt="직접 설계한 로봇 차체 3D 렌더" loading="lazy"><figcaption>직접 설계한 3단 차체 · OpenSCAD / Python CAD</figcaption></figure>
         <figure class="shot contain"><img src="./assets/media/bbiyong-power_wiring.jpg" alt="배터리부터 Orin까지의 무납땜 전원 배선도" loading="lazy"><figcaption>무납땜 전원 배선 설계</figcaption></figure>
       </div>
-      <div class="stats">
-        <div class="stat rv"><b>26.38%</b><span>카메라 CPU 사용률 · 기존 113.95%<br>코어 하나 기준, 각 방식으로 20초 측정</span></div>
-        <div class="stat rv"><b>0.575초</b><span>바퀴 위치 정보의 최대 갱신 공백<br>목표 간격 0.05초</span></div>
-        <div class="stat rv"><b>8.2 Mbps</b><span>로봇 송신량 · 기존 12.3 Mbps<br>서버로 보내는 관제 영상 720p · 초당 10장</span></div>
-      </div>
+      <section id="patrol-performance" aria-label="순찰 성능 변경 전후">
+        <div class="stats">
+          <div class="stat"><h3>Orin 부하 평균</h3><b data-reading>5.44</b>
+            <svg viewBox="0 0 260 114" role="img" aria-label="6코어 칩에 환산해 표시한 시스템 부하 평균"></svg>
+            <p>색 면적은 평균 작업 수를 나타냅니다. 고성능 모드 전환 및 클럭 고정 전후로 5.44에서 1.74로 줄었습니다.</p></div>
+          <div class="stat"><h3>ESP32 데이터 전송</h3><b data-reading>순차 전송</b>
+            <svg viewBox="0 0 260 114" role="img" aria-label="열화상과 바퀴 회전값이 합류해 Orin으로 전송되는 공유 직렬선"></svg>
+            <p>주황 사각형은 열화상, 원은 바퀴 정보입니다. 변경 후에는 바퀴 정보를 우선하고 여유 시간에 열화상을 조각으로 보냅니다.</p></div>
+          <div class="stat"><h3>로봇 송신량</h3><b data-reading>12.3 Mbps</b>
+            <svg viewBox="0 0 260 114" role="img" aria-label="별도 회선 시험 기준 11.5 Mbps와 예시 송신량을 비교하는 계기판"></svg>
+            <p>실측 송신량은 12.3에서 8.2 Mbps로 줄었습니다. 계기판의 움직임은 예시이며 기준선은 별도 회선 시험값입니다.</p></div>
+        </div>
+        <div class="patrol-controls" aria-label="전후 비교"><button type="button" aria-pressed="true">변경 전</button><button type="button" aria-pressed="false">변경 후</button><button type="button">변화 재생 ↗</button></div>
+      </section>
+      <script defer src="./patrol-performance.js"></script>
       <section class="story">
         <h3>순찰과 관제에서 해결한 문제</h3>
         <div class="steps">
