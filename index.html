@@ -597,14 +597,14 @@ html.static .shot img,html.static .shot video{transform:none}
         <div>
           <p class="kicker">SSAFY 공통 프로젝트 · 우수상 1등</p>
           <h2 id="bbiyong-title">삐용</h2>
-          <p class="lede">LiDAR로 지도를 만들고 웨이포인트를 돌며, 카메라로 화재와 연기를 찾아 관제 대시보드에 알리는 실내 순찰 로봇입니다. 차체부터 직접 설계했습니다.</p>
+          <p class="lede">사람이 자리를 비운 동안에도 삐용은 고정 카메라의 시야 밖까지 순찰합니다. LiDAR로 만든 지도를 따라 이동하며 화재와 연기를 감지하고, 관제 담당자는 지도에서 경보 위치를 확인할 수 있습니다.</p>
         </div>
         <span class="case-num" aria-hidden="true">01</span>
       </header>
       <dl class="meta">
         <div><dt>기간</dt><dd>2026.07.16 – 08.14</dd></div>
         <div><dt>팀</dt><dd>6명 · FE / BE / Robot / AI</dd></div>
-        <div><dt>역할</dt><dd>차체·전장 설계, ESP32 펌웨어, 로봇 통합, FE 디자인 시스템. 순찰 중단 시 관제에서 복구하는 기능을 구현하고, 지도를 새로 만들 때 이전 경보가 남는 문제를 수정</dd></div>
+        <div><dt>역할</dt><dd>차체·전장 설계, ESP32 펌웨어, 로봇 통합, 관제 화면 디자인 시스템</dd></div>
         <div><dt>스택</dt><dd>Jetson Orin Nano · ESP32 · ROS 2 Humble · SLAM Toolbox · Nav2 · TensorRT YOLO · Spring · React</dd></div>
       </dl>
       <div class="media two">
@@ -623,6 +623,8 @@ html.static .shot img,html.static .shot video{transform:none}
       <section class="story">
         <h3>풀었던 문제</h3>
         <div class="steps">
+          <div class="step rv"><h4>새 지도에 이전 화재 경보가 남았다</h4><p><b>증상</b>실내 지도를 다시 만들면 예전 화재·과열 경보가 새 지도 위에도 표시됐습니다.</p><p><b>수정</b>서버가 경보를 저장할 때 당시 지도의 ID를 함께 기록하도록 했습니다.</p><p><b>결과</b>관제 화면에서 현재 지도에 속한 경보만 표시합니다.</p></div>
+          <div class="step rv"><h4>순찰이 멈췄을 때 관제에서 원인을 확인하기 어려웠다</h4><p><b>증상</b>다음 순찰 지점까지 경로를 계산하지 못하면 운영자가 개입해야 했습니다.</p><p><b>수정</b>서버가 경로 계산 중단을 관제 로그에 남기도록 했습니다.</p><p><b>결과</b>운영자는 해당 로그에서 바로 Nav2 복구를 요청할 수 있습니다.</p></div>
           <div class="step rv"><h4>/odom이 9.9Hz로 떨어지고 최대 0.575초 끊겼다</h4><p><b>접근</b>같은 Orin에서 도는 <code>/scan</code>을 대조군으로 두고 비교해 Orin 과부하가 아님을 먼저 확인했습니다.</p><p><b>원인</b>커밋 없이 추가된 열화상 센서 판독이 ESP32 <code>loop()</code>를 최대 약 570ms 막아 20Hz PID 루프를 잠식하고 있었습니다.</p><p><b>결과</b>코어 분리, 판독 주기 제한, 원시 바이트 전송의 세 가지 대책을 정리했습니다.</p></div>
           <div class="step rv"><h4>부팅할 때마다 로봇이 다르게 움직였다</h4><p><b>접근</b>증상 여섯 개를 구조적 성질 네 개로 다시 묶었습니다. 기동 순서 미강제, 판정 불가 시 통과, map→odom 소유권 이중화, 조용한 실패.</p><p><b>원인</b>DDS 참여자는 약 85개인데 실제 노드는 37개. 좀비 노드 정황이 있었습니다.</p><p><b>결과</b>2차 시연에서는 자동화를 빼고 다섯 단계를 순서대로 기동했습니다.</p></div>
           <div class="step rv"><h4>전진 명령에도 로봇이 거의 움직이지 않았다</h4><p><b>접근</b>원시 텔레메트리에서 duty는 상한인데 엔코더는 0인 것을 확인하고, 모터 보호를 위해 시험을 멈췄습니다.</p><p><b>발견</b>대시보드 슬라이더의 잔여값이 안전 상한 <code>duty_max</code>를 조용히 덮어쓰는 버그를 함께 찾았습니다.</p><p><b>결과</b>버그는 바로 고쳤고, 원인은 물리적 끼임으로 확인했습니다.</p></div>
