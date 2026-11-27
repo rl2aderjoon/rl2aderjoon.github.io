@@ -63,6 +63,7 @@ html:has(.site-menu[open]){overflow:hidden}
 .tag{position:absolute;top:16px;left:max(calc(var(--cx) + var(--gut)),340px);font-size:clamp(13px,1.1vw,17px);font-weight:500;letter-spacing:-.02em;line-height:1.3}
 .band nav{position:absolute;top:16px;right:140px;display:grid;gap:1px;font-size:13px;font-weight:500}
 .band nav a{text-decoration:none;color:var(--mute);transition:color .2s}.band nav a:hover{color:var(--fg)}
+@media (max-width:1180px){.band nav{top:56px}}
 .band .cta{position:absolute;top:16px;right:var(--gut);text-decoration:none;font-weight:600;font-size:13px}
 .band-left{position:absolute;left:var(--gut);bottom:18px;width:max(260px,calc((var(--cx) - var(--gut) * 2) * 2 / 3));container-type:inline-size}
 .intro{overflow:hidden;max-height:calc(var(--ik) * 220 * var(--activity-unit, 1px));opacity:var(--ik);color:var(--fg-2)}
@@ -403,7 +404,7 @@ html.static .shot img,html.static .shot video{transform:none}
     <span class="mark-bars" aria-hidden="true"><i></i><i></i><i></i></span>
     <span><b>장효준</b>Hyojoon Jang</span>
   </button>
-  <p class="tag">(Backend · Data · Robotics)<br>2026 Selected Work</p>
+  <p class="tag" lang="en">From Recommender Systems to Robot Control<br>Five Projects from 2026</p>
   <nav aria-label="섹션"><a href="#work">Work</a><a href="#awards">Awards</a><a href="#how">How I work</a><a href="#contact">Contact</a></nav>
   <a class="cta" href="https://github.com/rl2aderjoon" target="_blank" rel="noopener">GitHub ↗</a>
   <div class="band-left">
