@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>장효준 포트폴리오</title>
-<meta name="description" content="장효준(rl2aderjoon)의 2026년 작업. 삐용, 가볼래, 로보터블 연계 프로젝트, axMap, Understand Investment.">
+<meta name="description" content="장효준(rl2aderjoon)의 2026년 작업. 삐용, 가볼래, 로보터블 연계 프로젝트, axMap.">
 <meta name="theme-color" content="#e8e8e6">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%23121212%22/%3E%3Crect x=%226%22 y=%228%22 width=%2220%22 height=%224%22 fill=%22%23fff%22/%3E%3Crect x=%226%22 y=%2214%22 width=%2214%22 height=%224%22 fill=%22%23fff%22/%3E%3Crect x=%226%22 y=%2220%22 width=%2220%22 height=%224%22 fill=%22%23fff%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -183,6 +183,7 @@ html[data-intro-transition] .cross::before,html[data-intro-transition] .cross::a
 .thumb.bars-thumb i:last-child{background:#bdbdb8}
 .thumb.bars-thumb span{font-size:10px;color:#7c7c78;margin-top:4px}
 .badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 6px;background:var(--signal);color:#fff;margin-left:8px;vertical-align:4px;letter-spacing:0}
+.badge.personal{background:#595959}
 .badge.line{background:transparent;color:inherit;box-shadow:inset 0 0 0 1px currentColor;font-weight:500}
 
 /* ---------- case study ---------- */
@@ -199,7 +200,6 @@ html[data-intro-transition] .cross::before,html[data-intro-transition] .cross::a
 .media.two{grid-template-columns:1.6fr 1fr}
 .media.two-eq{grid-template-columns:1fr 1fr}
 .media.three{grid-template-columns:2fr 1fr 1fr;--h:clamp(180px,17vw,300px)}
-.media.pick{grid-template-columns:2.4fr 1fr;--h:clamp(300px,34vw,560px)}
 .shot{background:var(--card);overflow:hidden;position:relative;height:var(--h);clip-path:inset(14% 0 0 0);transition:clip-path 1.1s var(--ease),background-color .7s}
 .shot img,.shot video{width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform 1.4s var(--ease)}
 .shot.in{clip-path:inset(0 0 0 0)}
@@ -369,9 +369,8 @@ html.static .shot img,html.static .shot video{transform:none}
 }
 @media (max-width:900px){
   :root{--gut:16px}
-  .media.two,.media.two-eq,.media.three,.media.pick{grid-template-columns:1fr}
+  .media.two,.media.two-eq,.media.three{grid-template-columns:1fr}
   .shot{height:auto;aspect-ratio:16/10}
-  .media.pick .shot+.shot{aspect-ratio:3/4}
   .stats{grid-template-columns:1fr;gap:28px}
   .story{grid-template-columns:1fr;gap:16px}
   .awards{grid-template-columns:1fr}
@@ -428,7 +427,7 @@ html.static .shot img,html.static .shot video{transform:none}
     <span class="mark-bars" aria-hidden="true"><i></i><i></i><i></i></span>
     <span><b>장효준</b>Hyojoon Jang</span>
   </button>
-  <p class="tag" lang="en">From Recommender Systems to Robot Control<br>Five Projects from 2026</p>
+  <p class="tag" lang="en">From Recommender Systems to Robot Control<br>Four Projects from 2026</p>
   <nav aria-label="섹션"><a href="#work">Work</a><a href="#awards">Awards</a><a href="#how">How I work</a><a href="#contact">Contact</a></nav>
   <a class="cta" href="https://github.com/rl2aderjoon" target="_blank" rel="noopener">GitHub ↗</a>
   <div class="band-left">
@@ -480,8 +479,8 @@ html.static .shot img,html.static .shot video{transform:none}
       </div>
       <div class="panel" data-panel="work">
         <p class="rp-k">Selected work</p>
-        <p class="rp-count"><span id="wk-n">00</span><small> / 05</small></p>
-        <p class="rp-t" id="wk-name">다섯 개의 프로젝트</p>
+        <p class="rp-count"><span id="wk-n">00</span><small> / 04</small></p>
+        <p class="rp-t" id="wk-name">네 개의 프로젝트</p>
         <p class="rp-l" id="wk-line">스크롤하면 하나씩 펼쳐집니다.</p>
         <div class="prog"><i id="wk-prog"></i></div>
       </div>
@@ -515,14 +514,6 @@ html.static .shot img,html.static .shot video{transform:none}
         <p class="rp-l">회사가 다른 AI 에이전트들이 경로를 먼저 선점하고, 쪽지와 요청을 주고받으며 한 저장소에서 함께 일합니다.</p>
         <dl class="rp-dl"><div><dt>맡은 일</dt><dd>설계, 구현, 문서, npm 배포</dd></div><div><dt>배포</dt><dd>npm axmap-cli v1.7</dd></div></dl>
         <div class="prog"><i></i></div>
-        <a class="rp-next" href="#ui">다음 · Understand Investment ↓</a>
-      </div>
-      <div class="panel" data-panel="ui">
-        <p class="rp-k">Case 05 · 개인</p>
-        <p class="rp-t">Understand<br>Investment</p>
-        <p class="rp-l">KOSPI 200 분석 대시보드. 기능보다 검증에 시간을 더 썼습니다.</p>
-        <dl class="rp-dl"><div><dt>맡은 일</dt><dd>프론트, 백엔드, 데이터 수집, 퀀트 검증, AWS 배포</dd></div><div><dt>기간</dt><dd>2026.03 – 06</dd></div></dl>
-        <div class="prog"><i></i></div>
         <a class="rp-next" href="#awards">다음 · 수상 ↓</a>
       </div>
     </div>
@@ -531,7 +522,6 @@ html.static .shot img,html.static .shot video{transform:none}
       <a href="#gabolle" data-for="gabolle"><em>02</em>가볼래</a>
       <a href="#robotable" data-for="robotable"><em>03</em>로보터블 연계</a>
       <a href="#axmap" data-for="axmap"><em>04</em>axMap</a>
-      <a href="#ui" data-for="ui"><em>05</em>Understand Investment</a>
     </nav>
   </div>
 </aside>
@@ -591,22 +581,13 @@ html.static .shot img,html.static .shot video{transform:none}
             <figure class="thumb bars-thumb" aria-hidden="true"><i style="width:100%"></i><i style="width:99%"></i><i style="width:97%"></i><i style="width:89%"></i><i style="width:30%"></i><span>경계 관측률 · 신호별</span></figure>
           </li>
           <li class="proj" data-name="axMap" data-line="회사가 다른 AI 에이전트들의 선점·대화 도구">
-            <a class="proj-row" href="#axmap"><span class="n">04</span><span class="t">axMap</span><span class="y">2026.08–</span></a>
+            <a class="proj-row" href="#axmap"><span class="n">04</span><span class="t">axMap<span class="badge personal">개인 프로젝트</span></span><span class="y">2026.08–</span></a>
             <div class="more"><div><div class="more-in">
               <p>Claude · Codex · Gemini 에이전트가 한 저장소에서 고칠 경로를 먼저 선점하고, 회사가 달라도 쪽지와 작업 요청을 주고받게 합니다. 6인 팀에서 한 달 동안 3,562번 쓰였습니다.</p>
               <ul class="chips"><li>Node.js</li><li>Git ref CAS</li><li>MCP</li><li>로컬 IPC</li><li>npm</li></ul>
               <a class="go" href="#axmap">사례 보기 →</a>
             </div></div></div>
             <figure class="thumb"><img src="./assets/media/axmap-05.jpg" alt="" loading="lazy" style="object-fit:contain;background:#fff"></figure>
-          </li>
-          <li class="proj" data-name="Understand Investment" data-line="KOSPI 200 분석 대시보드와 7기준 추천">
-            <a class="proj-row" href="#ui"><span class="n">05</span><span class="t">Understand Investment</span><span class="y">2026.03–06</span></a>
-            <div class="more"><div><div class="more-in">
-              <p>예측, 팩터 백테스트, 일곱 가지 매수 기준을 보여 주는 대시보드입니다. 효과가 없다고 나온 지표와 기능은 데이터로 확인하고 접었습니다.</p>
-              <ul class="chips"><li>React</li><li>FastAPI</li><li>scikit-learn</li><li>AWS</li></ul>
-              <a class="go" href="#ui">사례 보기 →</a>
-            </div></div></div>
-            <figure class="thumb"><img src="./assets/media/ui-mobile-pick.jpg" alt="" loading="lazy" style="object-position:50% 0"></figure>
           </li>
         </ol>
       </div>
@@ -809,40 +790,6 @@ html.static .shot img,html.static .shot video{transform:none}
       <p class="note">충돌을 몇 번 막았는지는 측정하지 않았습니다. 거절 기록이 장부에 남지 않기 때문입니다. 쪽지 묶음으로 실제 아낀 토큰과, 같은 회사 세션끼리의 대화와 비교한 속도도 아직 측정하지 않았습니다. 시간 수치는 Windows 한 대에서 잰 값입니다.</p>
     </article>
 
-    <!-- 05 UI -->
-    <article class="case" id="ui" data-theme="light" data-panel-for="ui" aria-labelledby="ui-title">
-      <header class="case-head">
-        <div>
-          <p class="kicker">개인 프로젝트</p>
-          <h2 id="ui-title">Understand Investment</h2>
-          <p class="lede">KOSPI 200 종목의 예측, 팩터 백테스트, "오늘 뭘 살까"에 답하는 7기준 추천을 보여 주는 대시보드입니다. 기능을 넣는 것보다 효과를 검증하는 데 시간을 더 썼습니다.</p>
-        </div>
-        <span class="case-num" aria-hidden="true">05</span>
-      </header>
-      <dl class="meta">
-        <div><dt>기간</dt><dd>2026.03.18 – 06.10</dd></div>
-        <div><dt>팀</dt><dd>개인</dd></div>
-        <div><dt>역할</dt><dd>프론트, 백엔드, 데이터 수집, 퀀트 검증, AWS 배포</dd></div>
-        <div><dt>스택</dt><dd>React 19 · Tauri · FastAPI · SQLAlchemy · scikit-learn · AWS EC2 / S3</dd></div>
-      </dl>
-      <div class="media pick">
-        <figure class="shot"><img src="./assets/media/ui-desktop.jpg" alt="데스크톱 대시보드. 추세 채널 차트, 거시지표, 뉴스, 예측 목록" loading="lazy" style="object-position:0 0"><figcaption>데스크톱 대시보드</figcaption></figure>
-        <figure class="shot"><img src="./assets/media/ui-mobile-pick.jpg" alt="모바일 오늘의 추천 화면. 7기준 통과와 매매 계획" loading="lazy" style="object-position:50% 0"><figcaption>모바일 TODAY'S PICK</figcaption></figure>
-      </div>
-      <div class="stats">
-        <div class="stat rv"><b>1,728</b><span>7기준 파라미터 조합을 walk-forward로 탐색. 앞 70%로 고르고 뒤 30%로 평가</span></div>
-        <div class="stat rv"><b>+0.77→0.03</b><span>11종목에서 보인 모멘텀 상관이 156종목 전체에서 사라져 가중치 v1.1을 폐기</span></div>
-        <div class="stat rv"><b>ρ 0.105</b><span>유사 과거 사례 기능의 5일 회귀 결과(p=0.30). 효과가 없어서 기능을 접었습니다.</span></div>
-      </div>
-      <section class="story">
-        <h3>풀었던 문제</h3>
-        <div class="steps">
-          <div class="step rv"><h4>AI 추천이 이미 많이 오른 종목만 골랐다</h4><p><b>진단</b>추격 편향이 들어오는 경로 세 곳을 코드에서 찾았습니다. UP 1차 필터, 빈 값일 때 가중치 재분배, 기대 상승률 2차 정렬.</p><p><b>재설계</b>52주 고점 대비 하락, 장기 이동평균 재안착, 저점을 높이는 채널, 돌파일 거래량 같은 일곱 가지 매수 기준.</p><p><b>정직하게</b>과거 시점 데이터가 없는 산업·재무 기준은 백테스트에서 뺐다고 밝혔습니다.</p></div>
-          <div class="step rv"><h4>인기 있는 지표에 정말 엣지가 있을까</h4><p><b>접근</b>시그널 12,237건을 같은 기간 시장 전체 148,795건과 비교했습니다.</p><p><b>결과</b>4주 승률 49.7%로 시장 기준선 50.8%보다 낮았습니다.</p><p><b>판단</b>엣지가 없다는 것을 숫자로 확인하고 추천 근거에서 뺐습니다.</p></div>
-        </div>
-      </section>
-    </article>
-
     <!-- AWARDS -->
     <section class="sec" id="awards" data-theme="light" data-rail="none" data-panel-for="awards" aria-labelledby="awards-title">
       <p class="kicker">Awards</p>
@@ -882,7 +829,7 @@ html.static .shot img,html.static .shot video{transform:none}
   </div>
   <div class="foot-cols">
     <div><h3>최근 작업</h3><p>로보터블 × SSAFY 기업 연계 프로젝트<br><span id="clock">Busan, KR</span></p></div>
-    <div><h3>Work</h3><ul><li><a href="#bbiyong">삐용</a></li><li><a href="#gabolle">가볼래</a></li><li><a href="#robotable">로보터블 연계</a></li><li><a href="#axmap">axMap</a></li><li><a href="#ui">Understand Investment</a></li></ul></div>
+    <div><h3>Work</h3><ul><li><a href="#bbiyong">삐용</a></li><li><a href="#gabolle">가볼래</a></li><li><a href="#robotable">로보터블 연계</a></li><li><a href="#axmap">axMap</a></li></ul></div>
     <div><h3>Links</h3><ul><li><a href="https://github.com/rl2aderjoon" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://www.npmjs.com/package/axmap-cli" target="_blank" rel="noopener">npm · axmap-cli</a></li></ul></div>
     <div><h3>Education</h3><ul><li>SSAFY 15기</li><li>부울경 캠퍼스</li></ul></div>
   </div>
@@ -1064,7 +1011,7 @@ html.static .shot img,html.static .shot video{transform:none}
         const cur = items[active];
         cur?.classList.add('on');
         wkN.textContent = active < 0 ? '00' : String(active + 1).padStart(2, '0');
-        wkName.textContent = cur ? cur.dataset.name : '다섯 개의 프로젝트';
+        wkName.textContent = cur ? cur.dataset.name : '네 개의 프로젝트';
         wkLine.textContent = cur ? cur.dataset.line : '스크롤하면 하나씩 펼쳐집니다.';
         lastProject = active;
       }
