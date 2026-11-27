@@ -125,24 +125,18 @@ html:not(.static) .h-say:not([data-visible]){visibility:hidden;content-visibilit
 .h-say .w{opacity:.18;transition:opacity .36s}
 .h-say[data-revealed] .w{opacity:1;transition-delay:var(--reveal-delay)}
 
-/* 스크롤로 시작한 소개 전환은 두 화면을 캡처해 합성 단계에서 움직인다. */
-html[data-intro-transition] .vline{view-transition-name:intro-vline}
-html[data-intro-transition] .hline{view-transition-name:intro-hline}
-html[data-intro-transition] .cross{view-transition-name:intro-cross}
-html[data-intro-transition] .tag{view-transition-name:intro-tag}
-html[data-intro-transition] .h-say{view-transition-name:intro-copy}
-html[data-intro-transition] :is(body,.band,.band nav a,.btn,.vline,.hline),
-html[data-intro-transition] .cross::before,html[data-intro-transition] .cross::after{transition:none}
-::view-transition{pointer-events:none}
-::view-transition-group(*){animation:none}
-::view-transition-old(*),::view-transition-new(*){animation-duration:var(--intro-duration)}
-::view-transition-image-pair(intro-vline){--intro-offset:var(--intro-shift-x) 0px}
-::view-transition-image-pair(intro-hline){--intro-offset:0px var(--intro-shift-y)}
-::view-transition-image-pair(intro-cross){--intro-offset:var(--intro-shift-x) var(--intro-shift-y)}
-::view-transition-image-pair(intro-tag){--intro-offset:var(--intro-shift-tag) 0px}
-::view-transition-image-pair(intro-vline),::view-transition-image-pair(intro-hline),
-::view-transition-image-pair(intro-cross),::view-transition-image-pair(intro-tag){animation:intro-shift var(--intro-duration) cubic-bezier(.42,0,.58,1) both}
-@keyframes intro-shift{from{translate:var(--intro-offset)}to{translate:0px 0px}}
+/* 첫 화면의 두 레이어는 같은 교차점을 기준으로 축소된다. */
+.intro-plane{display:contents}
+html.intro-moving:not(.static) .intro-plane{
+  display:block;position:absolute;left:var(--cx);top:var(--cy);width:100%;height:100vh;
+  transform:translate(-55vw,-57vh) scale(var(--intro-scale));
+  transform-origin:55vw 57vh;opacity:var(--intro-opacity);pointer-events:none
+}
+.intro-moving .intro-plane > *{--cx:55vw;--cy:57vh}
+.intro-moving .intro-plane :is(.band-left,.band-head){bottom:calc(43% + 18px)}
+.intro-moving .intro-plane .btn{pointer-events:auto}
+html:not(.static) .cross{transform:translate(var(--cx),var(--cy)) scale(var(--intro-scale,1))}
+html:not(.static) .band-left{opacity:var(--actions-opacity,1)}
 
 /* ---------- 본문: 왼쪽 칸 너비만큼 비켜 선다 ---------- */
 .main{margin-left:var(--mx);padding:0 var(--gut);min-width:0}
@@ -430,6 +424,7 @@ html.static .shot img,html.static .shot video{transform:none}
   <p class="tag" lang="en">From Recommender Systems to Robot Control<br>Four Projects from 2026</p>
   <nav aria-label="섹션"><a href="#work">Work</a><a href="#awards">Awards</a><a href="#how">How I work</a><a href="#contact">Contact</a></nav>
   <a class="cta" href="https://github.com/rl2aderjoon" target="_blank" rel="noopener">GitHub ↗</a>
+  <div class="intro-plane">
   <div class="band-left">
     <div class="btns"><a class="btn" href="#work">대표 작업 보기 ↘</a><a class="btn ghost" href="#contact">연락하기 ↗</a></div>
     <section class="intro" aria-label="개발 활동과 토큰 사용량">
@@ -449,6 +444,7 @@ html.static .shot img,html.static .shot video{transform:none}
     </section>
   </div>
   <div class="band-head"><h1><span>풀어야 할 문제에 맞춰</span> <span>기술을 고릅니다</span></h1></div>
+  </div>
 </header>
 
 <dialog class="site-menu" id="site-menu" aria-labelledby="site-menu-title">
@@ -526,9 +522,10 @@ html.static .shot img,html.static .shot video{transform:none}
   </div>
 </aside>
 
-<!-- 히어로: 교차점이 왼쪽 위로 움직이며 카드가 커졌다가 사라지고, 그 자리에 설명이 켜진다 -->
+<!-- 히어로: 교차점이 왼쪽 위로 움직이며 첫 화면이 축소되었다가 사라지고, 그 자리에 설명이 켜진다 -->
 <section class="hero" id="hero" aria-label="소개">
   <div class="stage">
+    <div class="intro-plane">
     <div class="h-stats">
       <div class="stat"><b>29,540</b><span>npm 누적 다운로드</span></div>
       <div class="stat"><b>3,562</b><span>팀 저장소에서 쓰인<br>axMap 선점 횟수</span></div>
@@ -537,7 +534,8 @@ html.static .shot img,html.static .shot video{transform:none}
     </div>
     <figure class="h-card">
       <video src="./assets/media/bbiyong-maze-timelapse.mp4" poster="./assets/media/bbiyong-maze-poster.jpg" muted loop playsinline autoplay preload="metadata" aria-label="삐용 로봇이 박스 미로를 주행하는 타임랩스"></video>
-      </figure>
+    </figure>
+    </div>
     <div class="h-say">
       <p class="say-a">자율 순찰 로봇, 개인화 여행 추천, LLM 파인 튜닝을 접목한 로봇 회사의 데이터 수집 파이프라인, 올해는 분야를 가리지 않았습니다.</p>
       <p class="say-b">AI 시대에 무엇을 잘할 수 있을지, AI 시대에 LLM을 어떻게 다뤄야 할지, 사람의 역할은 무엇이고 어디에 필요한지를 탐구하는 시간이었습니다.</p>
@@ -959,32 +957,36 @@ html.static .shot img,html.static .shot video{transform:none}
       const p = pinProgress(heroRect, 0);
       const q = pinProgress(work.getBoundingClientRect(), cyF);
       let cx, cy;
-      const showSay = p >= .44 && heroRect.bottom > cyF;
+      const showSay = p >= .55 && heroRect.bottom > cyF;
       say.toggleAttribute('data-visible', showSay);
-      const showPreview = p < .44;
+      const showPreview = p < .55;
       if (showPreview !== previewVisible) {
         previewVisible = showPreview;
         if (showPreview) previewVideo.play().catch(() => {});
         else previewVideo.pause();
       }
       if (p < .82 || !showSay) say.toggleAttribute('data-revealed', false);
-      else if (p >= .9 && !sceneScrollFrame && !introViewTransition) say.toggleAttribute('data-revealed', true);
+      else if (p >= .9 && !sceneScrollFrame) say.toggleAttribute('data-revealed', true);
+      const moving = p < .55;
+      const k = inout(clamp(p / .55));
+      const scale = lerp(1, Math.min(1, railW / (vw * .55), cyF / (vh * .57)), k);
+      root.classList.toggle('intro-moving', moving);
+      css(root, '--intro-scale', scale);
+      css(root, '--intro-opacity', 1 - clamp((p - .40) / .15));
+      css(band, '--actions-opacity', moving ? 1 : clamp((p - .55) / .12));
+      css(stage, '--sto', moving ? 1 : 0);
       if (p < 1) {
         // 교차점이 (55%, 57%)에서 (사이드바 너비, 헤더 띠 높이)로 움직인다
-        const k = inout(clamp(p / .5));
         cx = lerp(vw * .55, railW, k);
         cy = lerp(vh * .57, cyF, k);
         curX = cx;
         css(main, '--mx', railW + 'px');
-        css(band, '--ik', (1 - clamp(p / .22)).toFixed(3));
-        css(band, '--ho', (1 - clamp((p - .04) / .22)).toFixed(3));
-        css(stage, '--sto', (1 - clamp(p / .18)).toFixed(3));
-        const gone = clamp((p - .3) / .14);
-        css(stage, '--co', (1 - gone).toFixed(3));
-        css(stage, '--cs', (1 - gone * .06).toFixed(3));
-        css(stage, '--sy', clamp((p - .44) / .06).toFixed(3));
-        css(side, '--so', clamp((p - .4) / .12).toFixed(3));
-        theme = p > .3 ? 'dark' : 'light';
+        css(band, '--ik', moving ? 1 : 0);
+        css(band, '--ho', moving ? 1 : 0);
+        css(stage, '--co', moving ? 1 : 0);
+        css(stage, '--sy', clamp((p - .55) / .12));
+        css(side, '--so', clamp((p - .55) / .12));
+        theme = moving ? 'light' : 'dark';
         panel = 'say';
       } else {
         // 히어로 뒤: 섹션이 사이드바를 원하면 열고, 아니면 접는다
@@ -1033,41 +1035,8 @@ html.static .shot img,html.static .shot video{transform:none}
   function schedule() { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; frame(); }); } }
   let lastWheelAt = -Infinity, wheelDistance = 0, consumedWheel = false;
   let sceneScrollFrame = 0, sceneScrollHoldUntil = 0;
-  let introViewTransition = null;
   const introDuration = 2000, workScrollDuration = 1800;
-  css(root, '--intro-duration', introDuration + 'ms');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-
-  function playIntroScroll(destination) {
-    if (typeof document.startViewTransition === 'function') {
-      const endsAtTop = destination === 0;
-      const ox = vline.getBoundingClientRect().left;
-      const oy = hline.getBoundingClientRect().top;
-      const tx = endsAtTop ? innerWidth * .55 : railW;
-      const ty = endsAtTop ? innerHeight * .57 : cyF;
-      const gutter = parseFloat(getComputedStyle(root).getPropertyValue('--gut'));
-      css(root, '--intro-shift-x', (ox - tx) + 'px');
-      css(root, '--intro-shift-y', (oy - ty) + 'px');
-      css(root, '--intro-shift-tag', (Math.max(ox + gutter, 340) - Math.max(tx + gutter, 340)) + 'px');
-      root.setAttribute('data-intro-transition', '');
-      const transition = document.startViewTransition(() => {
-        if (introViewTransition !== transition) return;
-        window.scrollTo({ top: destination, behavior: 'instant' });
-        frame();
-      });
-      introViewTransition = transition;
-      const finish = () => {
-        if (introViewTransition !== transition) return;
-        introViewTransition = null;
-        root.removeAttribute('data-intro-transition');
-        sceneScrollHoldUntil = performance.now() + 220;
-        frame();
-      };
-      transition.finished.then(finish, finish);
-      return;
-    }
-    scrollScene(destination, introDuration);
-  }
 
   function scrollScene(destination, duration) {
     const origin = scrollY;
@@ -1087,13 +1056,7 @@ html.static .shot img,html.static .shot video{transform:none}
   }
 
   function cancelSceneScroll() {
-    if (!introViewTransition && !sceneScrollFrame && performance.now() >= sceneScrollHoldUntil) return;
-    const transition = introViewTransition;
-    introViewTransition = null;
-    if (transition) {
-      transition.skipTransition();
-      root.removeAttribute('data-intro-transition');
-    }
+    if (!sceneScrollFrame && performance.now() >= sceneScrollHoldUntil) return;
     cancelAnimationFrame(sceneScrollFrame);
     sceneScrollFrame = 0;
     sceneScrollHoldUntil = 0;
@@ -1117,7 +1080,7 @@ html.static .shot img,html.static .shot video{transform:none}
       wheelDistance = 0;
       consumedWheel = false;
     }
-    if (introViewTransition || sceneScrollFrame || now < sceneScrollHoldUntil || consumedWheel) {
+    if (sceneScrollFrame || now < sceneScrollHoldUntil || consumedWheel) {
       lastWheelAt = now;
       consumedWheel = true;
       event.preventDefault();
@@ -1142,7 +1105,7 @@ html.static .shot img,html.static .shot video{transform:none}
     if (Math.abs(wheelDistance) < 18) return;
     consumedWheel = true;
     if (Math.max(scrollY, destination) <= introTop + 2) {
-      playIntroScroll(destination);
+      scrollScene(destination, introDuration);
     } else {
       scrollScene(destination, workScrollDuration);
     }
