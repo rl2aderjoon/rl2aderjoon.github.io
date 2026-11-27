@@ -53,7 +53,7 @@ code{font:.92em/1.5 ui-monospace,Consolas,monospace;letter-spacing:0;background:
 .band nav{position:absolute;top:16px;right:140px;display:grid;gap:1px;font-size:13px;font-weight:500}
 .band nav a{text-decoration:none;color:var(--mute);transition:color .2s}.band nav a:hover{color:var(--fg)}
 .band .cta{position:absolute;top:16px;right:var(--gut);text-decoration:none;font-weight:600;font-size:13px}
-.band-left{position:absolute;left:var(--gut);bottom:18px;width:max(260px,calc(var(--cx) - var(--gut) * 2));container-type:inline-size}
+.band-left{position:absolute;left:var(--gut);bottom:18px;width:max(260px,calc((var(--cx) - var(--gut) * 2) * 2 / 3));container-type:inline-size}
 .intro{overflow:hidden;max-height:calc(var(--ik) * 220 * var(--activity-unit, 1px));opacity:var(--ik);color:var(--fg-2)}
 .band-head{position:absolute;left:calc(var(--cx) + var(--gut));right:var(--gut);bottom:18px;opacity:var(--ho);transform:translateY(calc((1 - var(--ho)) * -30px));pointer-events:none}
 .band-head h1{font-size:clamp(30px,3.7vw,66px);line-height:1.04;letter-spacing:-.055em;font-weight:600;color:var(--dim)}
