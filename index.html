@@ -135,11 +135,13 @@ html[data-intro-transition] :is(body,.band,.band nav a,.btn,.vline,.hline),
 html[data-intro-transition] .cross::before,html[data-intro-transition] .cross::after{transition:none}
 ::view-transition{pointer-events:none}
 ::view-transition-group(*){animation:none}
-::view-transition-old(*),::view-transition-new(*){animation-duration:3s}
-::view-transition-image-pair(intro-vline){animation:intro-shift 3s cubic-bezier(.42,0,.58,1) both;--intro-offset:var(--intro-shift-x) 0px}
-::view-transition-image-pair(intro-hline){animation:intro-shift 3s cubic-bezier(.42,0,.58,1) both;--intro-offset:0px var(--intro-shift-y)}
-::view-transition-image-pair(intro-cross){animation:intro-shift 3s cubic-bezier(.42,0,.58,1) both;--intro-offset:var(--intro-shift-x) var(--intro-shift-y)}
-::view-transition-image-pair(intro-tag){animation:intro-shift 3s cubic-bezier(.42,0,.58,1) both;--intro-offset:var(--intro-shift-tag) 0px}
+::view-transition-old(*),::view-transition-new(*){animation-duration:var(--intro-duration)}
+::view-transition-image-pair(intro-vline){--intro-offset:var(--intro-shift-x) 0px}
+::view-transition-image-pair(intro-hline){--intro-offset:0px var(--intro-shift-y)}
+::view-transition-image-pair(intro-cross){--intro-offset:var(--intro-shift-x) var(--intro-shift-y)}
+::view-transition-image-pair(intro-tag){--intro-offset:var(--intro-shift-tag) 0px}
+::view-transition-image-pair(intro-vline),::view-transition-image-pair(intro-hline),
+::view-transition-image-pair(intro-cross),::view-transition-image-pair(intro-tag){animation:intro-shift var(--intro-duration) cubic-bezier(.42,0,.58,1) both}
 @keyframes intro-shift{from{translate:var(--intro-offset)}to{translate:0px 0px}}
 
 /* ---------- 본문: 왼쪽 칸 너비만큼 비켜 선다 ---------- */
@@ -501,7 +503,7 @@ html.static .shot img,html.static .shot video{transform:none}
         <a class="rp-next" href="#robotable">다음 · 로보터블 연계 ↓</a>
       </div>
       <div class="panel" data-panel="robotable">
-        <p class="rp-k">Case 03 · 기업 연계</p>
+        <p class="rp-k">Case 03 · 자율 3등</p>
         <p class="rp-t">조리 영상<br>동작 경계 검출</p>
         <p class="rp-l">값싼 신호로 전체를 훑고, 바뀔 만한 곳만 VLM으로 조밀하게 읽습니다.</p>
         <dl class="rp-dl"><div><dt>맡은 일</dt><dd>경계 검출 연구, 라벨링 도구·데이터셋, DB, Spring 서비스, B2C 앱</dd></div><div><dt>시작</dt><dd>2026.10 · 6명</dd></div></dl>
@@ -581,7 +583,7 @@ html.static .shot img,html.static .shot video{transform:none}
             <figure class="thumb"><img src="./assets/media/gabolle-live-home-desk.jpg" alt="" loading="lazy"></figure>
           </li>
           <li class="proj" data-name="로보터블 연계" data-line="조리 영상 동작 경계 검출 파이프라인">
-            <a class="proj-row" href="#robotable"><span class="n">03</span><span class="t">로보터블 연계<span class="badge line">완료</span></span><span class="y">2026.10 시작</span></a>
+            <a class="proj-row" href="#robotable"><span class="n">03</span><span class="t">로보터블 연계<span class="badge">자율 3등</span></span><span class="y">2026.10 시작</span></a>
             <div class="more"><div><div class="more-in">
               <p>조리 로봇의 판단 모델에 쓸 라벨을 싸게 만듭니다. 같은 판독 예산에서 임베딩 신호가 균일 표본보다 경계를 3.3배 더 자주 봤습니다.</p>
               <ul class="chips"><li>PyTorch</li><li>DINOv2</li><li>Gemini</li><li>NVDEC</li><li>Spring Boot</li></ul>
@@ -696,7 +698,7 @@ html.static .shot img,html.static .shot video{transform:none}
     <article class="case" id="robotable" data-theme="light" data-panel-for="robotable" aria-labelledby="robotable-title">
       <header class="case-head">
         <div>
-          <p class="kicker">기업 연계 · 로보터블 × SSAFY · 완료</p>
+          <p class="kicker">기업 연계 · 로보터블 × SSAFY · 자율 3등</p>
           <h2 id="robotable-title">조리 영상 동작 경계 검출</h2>
           <p class="lede">조리 로봇의 판단 모델에 쓸 라벨을 싸게 만드는 파이프라인입니다. 값싼 신호로 영상 전체를 훑어 상태가 바뀔 지점을 찾고, 그 주변만 VLM으로 조밀하게 읽습니다.</p>
         </div>
@@ -1016,18 +1018,20 @@ html.static .shot img,html.static .shot video{transform:none}
     let panel = zone ? (zone.dataset.panelFor || lastPanel) : lastPanel;
 
     if (!isStatic()) {
-      const p = pinProgress(hero.getBoundingClientRect(), 0);
+      const heroRect = hero.getBoundingClientRect();
+      const p = pinProgress(heroRect, 0);
       const q = pinProgress(work.getBoundingClientRect(), cyF);
       let cx, cy;
-      say.toggleAttribute('data-visible', p >= .44 && p < 1);
+      const showSay = p >= .44 && heroRect.bottom > cyF;
+      say.toggleAttribute('data-visible', showSay);
       const showPreview = p < .44;
       if (showPreview !== previewVisible) {
         previewVisible = showPreview;
         if (showPreview) previewVideo.play().catch(() => {});
         else previewVideo.pause();
       }
-      if (p < .82 || p >= 1) say.toggleAttribute('data-revealed', false);
-      else if (p >= .9 && !introScrollFrame && !introViewTransition) say.toggleAttribute('data-revealed', true);
+      if (p < .82 || !showSay) say.toggleAttribute('data-revealed', false);
+      else if (p >= .9 && !sceneScrollFrame && !introViewTransition) say.toggleAttribute('data-revealed', true);
       if (p < 1) {
         // 교차점이 (55%, 57%)에서 (사이드바 너비, 헤더 띠 높이)로 움직인다
         const k = inout(clamp(p / .5));
@@ -1054,6 +1058,7 @@ html.static .shot img,html.static .shot video{transform:none}
         cx = curX; cy = cyF;
         css(main, '--mx', cx + 'px');
         css(band, '--ik', 0); css(band, '--ho', 0); css(stage, '--co', 0);
+        css(stage, '--sy', showSay ? 1 : 0);
         css(side, '--so', clamp(cx / railW).toFixed(3));
       }
       for (const element of horizontalPositions) css(element, '--cx', cx + 'px');
@@ -1091,9 +1096,10 @@ html.static .shot img,html.static .shot video{transform:none}
   let ticking = false;
   function schedule() { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; frame(); }); } }
   let lastWheelAt = -Infinity, wheelDistance = 0, consumedWheel = false;
-  let scrollTarget = null, scrollDeadline = 0;
-  let introScrollFrame = 0, introScrollHoldUntil = 0;
+  let sceneScrollFrame = 0, sceneScrollHoldUntil = 0;
   let introViewTransition = null;
+  const introDuration = 2000, workScrollDuration = 1800;
+  css(root, '--intro-duration', introDuration + 'ms');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
   function playIntroScroll(destination) {
@@ -1118,50 +1124,54 @@ html.static .shot img,html.static .shot video{transform:none}
         if (introViewTransition !== transition) return;
         introViewTransition = null;
         root.removeAttribute('data-intro-transition');
-        introScrollHoldUntil = performance.now() + 220;
+        sceneScrollHoldUntil = performance.now() + 220;
         frame();
       };
       transition.finished.then(finish, finish);
       return;
     }
+    scrollScene(destination, introDuration);
+  }
+
+  function scrollScene(destination, duration) {
     const origin = scrollY;
     const start = performance.now();
     function advance(now) {
-      const progress = clamp((now - start) / 3000);
+      const progress = clamp((now - start) / duration);
       window.scrollTo({ top: lerp(origin, destination, inout(progress)), behavior: 'instant' });
       if (progress < 1) {
-        introScrollFrame = requestAnimationFrame(advance);
+        sceneScrollFrame = requestAnimationFrame(advance);
       } else {
-        introScrollFrame = 0;
-        introScrollHoldUntil = now + 220;
+        sceneScrollFrame = 0;
+        sceneScrollHoldUntil = now + 220;
       }
       frame();
     }
-    introScrollFrame = requestAnimationFrame(advance);
+    sceneScrollFrame = requestAnimationFrame(advance);
   }
 
-  function cancelIntroScroll() {
-    if (!introViewTransition && !introScrollFrame && performance.now() >= introScrollHoldUntil) return;
+  function cancelSceneScroll() {
+    if (!introViewTransition && !sceneScrollFrame && performance.now() >= sceneScrollHoldUntil) return;
     const transition = introViewTransition;
     introViewTransition = null;
     if (transition) {
       transition.skipTransition();
       root.removeAttribute('data-intro-transition');
     }
-    cancelAnimationFrame(introScrollFrame);
-    introScrollFrame = 0;
-    introScrollHoldUntil = 0;
+    cancelAnimationFrame(sceneScrollFrame);
+    sceneScrollFrame = 0;
+    sceneScrollHoldUntil = 0;
     consumedWheel = false;
     wheelDistance = 0;
   }
 
-  addEventListener('pointerdown', cancelIntroScroll, { passive: true });
+  addEventListener('pointerdown', cancelSceneScroll, { passive: true });
   addEventListener('keydown', event => {
-    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) cancelIntroScroll();
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) cancelSceneScroll();
   });
-  addEventListener('hashchange', cancelIntroScroll);
-  addEventListener('resize', cancelIntroScroll);
-  reducedMotion.addEventListener('change', cancelIntroScroll);
+  addEventListener('hashchange', cancelSceneScroll);
+  addEventListener('resize', cancelSceneScroll);
+  reducedMotion.addEventListener('change', cancelSceneScroll);
   addEventListener('wheel', event => {
     if (isStatic() || reducedMotion.matches || menu.open || !event.cancelable || event.ctrlKey || event.shiftKey ||
         !event.deltaY || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
@@ -1171,8 +1181,7 @@ html.static .shot img,html.static .shot video{transform:none}
       wheelDistance = 0;
       consumedWheel = false;
     }
-    if (scrollTarget !== null && (now >= scrollDeadline || Math.abs(scrollY - scrollTarget) < 2)) scrollTarget = null;
-    if (introViewTransition || introScrollFrame || now < introScrollHoldUntil || scrollTarget !== null || consumedWheel) {
+    if (introViewTransition || sceneScrollFrame || now < sceneScrollHoldUntil || consumedWheel) {
       lastWheelAt = now;
       consumedWheel = true;
       event.preventDefault();
@@ -1199,14 +1208,12 @@ html.static .shot img,html.static .shot video{transform:none}
     if (Math.max(scrollY, destination) <= introTop + 2) {
       playIntroScroll(destination);
     } else {
-      scrollTarget = destination;
-      scrollDeadline = now + 1200;
-      window.scrollTo({ top: destination, behavior: 'smooth' });
+      scrollScene(destination, workScrollDuration);
     }
   }, { passive: false });
   addEventListener('scroll', () => {
     hover = -1;
-    if (!introScrollFrame) schedule();
+    if (!sceneScrollFrame) schedule();
   }, { passive: true });
   addEventListener('resize', () => { measure(); schedule(); });
   measure(); frame();
