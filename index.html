@@ -44,11 +44,22 @@ code{font:.92em/1.5 ui-monospace,Consolas,monospace;letter-spacing:0;background:
 
 /* ---------- 위쪽 두 칸: 헤더 띠 ---------- */
 .band{position:fixed;inset:0 0 auto 0;height:var(--cy);z-index:50;background:var(--bg);transition:background-color .7s;font-size:12px;line-height:1.35}
-.mark{position:absolute;left:var(--gut);top:16px;display:flex;gap:10px;align-items:flex-start;text-decoration:none}
+.mark{position:absolute;left:var(--gut);top:16px;display:flex;gap:10px;align-items:flex-start;align-self:flex-start;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
 .mark-bars{display:grid;gap:3px;padding-top:2px}
 .mark-bars i{display:block;height:4px;background:currentColor}
 .mark-bars i:nth-child(1){width:28px}.mark-bars i:nth-child(2){width:20px}.mark-bars i:nth-child(3){width:28px}
 .mark b{font-weight:600;display:block}
+.site-menu{position:fixed;inset:0 auto 0 0;margin:0;width:min(86vw,360px);max-width:none;height:100%;max-height:none;padding:20px var(--gut);border:0;border-right:1px solid var(--line);background:var(--bg);color:var(--fg);overscroll-behavior:contain}
+.site-menu[open]{animation:site-menu-enter .25s var(--ease)}
+.site-menu::backdrop{background:rgb(0 0 0 / .36)}
+html:has(.site-menu[open]){overflow:hidden}
+.site-menu-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}
+.site-menu-head h2{font-size:16px;font-weight:650}
+.site-menu-close{min-width:44px;min-height:44px;padding:6px 10px;border:1px solid var(--line);background:none;color:inherit;font:inherit;cursor:pointer}
+.site-menu nav a{display:block;padding:12px 0;border-top:1px solid var(--line);font-size:21px;font-weight:550;text-decoration:none}
+.site-menu nav a:hover,.site-menu-close:hover{background:var(--bg-2)}
+@keyframes site-menu-enter{from{transform:translateX(-100%)}}
+@media (prefers-reduced-motion:reduce){.site-menu[open]{animation:none}}
 .tag{position:absolute;top:16px;left:max(calc(var(--cx) + var(--gut)),340px);font-size:clamp(13px,1.1vw,17px);font-weight:500;letter-spacing:-.02em;line-height:1.3}
 .band nav{position:absolute;top:16px;right:140px;display:grid;gap:1px;font-size:13px;font-weight:500}
 .band nav a{text-decoration:none;color:var(--mute);transition:color .2s}.band nav a:hover{color:var(--fg)}
@@ -56,8 +67,8 @@ code{font:.92em/1.5 ui-monospace,Consolas,monospace;letter-spacing:0;background:
 .band-left{position:absolute;left:var(--gut);bottom:18px;width:max(260px,calc((var(--cx) - var(--gut) * 2) * 2 / 3));container-type:inline-size}
 .intro{overflow:hidden;max-height:calc(var(--ik) * 220 * var(--activity-unit, 1px));opacity:var(--ik);color:var(--fg-2)}
 .band-head{position:absolute;left:calc(var(--cx) + var(--gut));right:var(--gut);bottom:18px;opacity:var(--ho);transform:translateY(calc((1 - var(--ho)) * -30px));pointer-events:none}
-.band-head h1{font-size:clamp(30px,3.7vw,66px);line-height:1.04;letter-spacing:-.055em;font-weight:600;color:var(--dim)}
-.band-head h1 b{font-weight:600;color:var(--fg)}
+.band-head h1{font-size:clamp(30px,3.7vw,66px);line-height:1.04;letter-spacing:-.055em;font-weight:600;color:var(--fg)}
+.band-head h1 span{display:block;white-space:nowrap}
 .btns{display:flex;gap:6px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;font-size:13px;font-weight:500;text-decoration:none;background:var(--fg);color:var(--bg);border:0;cursor:pointer;white-space:nowrap;transition:background-color .7s,color .7s,transform .2s}
 .btn:hover{transform:translateY(-1px)}
@@ -303,7 +314,7 @@ html.static .tag,html.static .band nav{display:none}
 html.static .band-left{position:static;width:auto;margin-top:28px}
 html.static .intro{max-height:none;opacity:1}
 html.static .band-head{position:static;opacity:1;transform:none;margin-top:44px;order:1;pointer-events:auto}
-html.static .band-head h1{font-size:clamp(30px,8vw,44px)}
+html.static .band-head h1{font-size:clamp(24px,7.7vw,44px)}
 html.static .band-left{order:2}
 html.static .hero{height:auto}
 html.static .stage{position:static;height:auto;overflow:visible;padding:0 16px}
@@ -388,10 +399,10 @@ html.static .shot img,html.static .shot video{transform:none}
 
 <!-- 위쪽 두 칸 -->
 <header class="band" id="top">
-  <a class="mark" href="#top" aria-label="맨 위로">
+  <button class="mark" type="button" aria-label="장효준 · 메뉴 열기" aria-haspopup="dialog" aria-controls="site-menu" aria-expanded="false">
     <span class="mark-bars" aria-hidden="true"><i></i><i></i><i></i></span>
     <span><b>장효준</b>Hyojoon Jang</span>
-  </a>
+  </button>
   <p class="tag">(Backend · Data · Robotics)<br>2026 Selected Work</p>
   <nav aria-label="섹션"><a href="#work">Work</a><a href="#awards">Awards</a><a href="#how">How I work</a><a href="#contact">Contact</a></nav>
   <a class="cta" href="https://github.com/rl2aderjoon" target="_blank" rel="noopener">GitHub ↗</a>
@@ -413,8 +424,22 @@ html.static .shot img,html.static .shot video{transform:none}
       </div>
     </section>
   </div>
-  <div class="band-head"><h1><b>풀어야 할 문제에 맞춰 기술을 고릅니다</b></h1></div>
+  <div class="band-head"><h1><span>풀어야 할 문제에 맞춰</span> <span>기술을 고릅니다</span></h1></div>
 </header>
+
+<dialog class="site-menu" id="site-menu" aria-labelledby="site-menu-title">
+  <div class="site-menu-head">
+    <h2 id="site-menu-title">메뉴</h2>
+    <form method="dialog"><button class="site-menu-close" type="submit" autofocus>닫기</button></form>
+  </div>
+  <nav aria-label="포트폴리오 섹션">
+    <a href="#top">맨 위로</a>
+    <a href="#work">대표 작업</a>
+    <a href="#awards">수상</a>
+    <a href="#how">일하는 방식</a>
+    <a href="#contact">연락하기</a>
+  </nav>
+</dialog>
 
 <!-- 왼쪽 아래 칸: 지금 보는 섹션에 따라 내용이 바뀐다 -->
 <aside class="side" aria-label="현재 섹션 안내">
@@ -845,6 +870,19 @@ html.static .shot img,html.static .shot video{transform:none}
 <script>
 (() => {
   const root = document.documentElement;
+  const menuButton = document.querySelector('.mark');
+  const menu = document.getElementById('site-menu');
+  menuButton.addEventListener('click', () => {
+    if (menu.open) return;
+    menu.showModal();
+    menuButton.setAttribute('aria-expanded', 'true');
+  });
+  menu.addEventListener('close', () => menuButton.setAttribute('aria-expanded', 'false'));
+  menu.addEventListener('click', event => {
+    if (event.target.closest('a') || (event.target === menu && event.clientX >= menu.getBoundingClientRect().right)) {
+      menu.close();
+    }
+  });
   const isStatic = () => root.classList.contains('static');
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const ease = t => 1 - Math.pow(1 - t, 3);
