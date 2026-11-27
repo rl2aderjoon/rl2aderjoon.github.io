@@ -11,8 +11,8 @@
 <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="./mobile-intro.css" media="(max-width: 900px)">
 <script defer src="./mobile-intro.js"></script>
-<link rel="stylesheet" href="./activity.css">
-<script defer src="./activity.js"></script>
+<link rel="stylesheet" href="./activity.css?v=2">
+<script defer src="./activity.js?v=2"></script>
 <style>
 :root{
   --bg:#e8e8e6; --bg-2:#f2f2f0; --card:#fff; --fg:#121212; --fg-2:#3a3a38; --mute:#7c7c78; --line:#c9c9c5; --dim:#a3a3a0; --ghost:#cdcdc9;
@@ -403,11 +403,11 @@ html.static .shot img,html.static .shot video{transform:none}
           <div class="activity-heading"><strong>최근 90일 활동</strong><span data-activity-streak></span></div>
           <div class="activity-months" aria-hidden="true"></div>
           <div class="activity-days" role="img" aria-label="최근 90일 활동"></div>
-          <p class="activity-note" data-activity-sources>GitLab · GitHub · Codex · Claude</p>
         </div>
         <div class="activity-tokens">
-          <div class="activity-heading"><strong>토큰 사용량</strong><span data-activity-through></span></div>
+          <div class="activity-heading"><strong>토큰 사용량</strong></div>
           <div class="activity-gauges"></div>
+          <div class="activity-legend" data-activity-legend hidden><span>Codex</span><span>Claude</span></div>
           <p class="activity-note" data-activity-status role="status">활동을 불러오는 중</p>
         </div>
       </div>

@@ -64,19 +64,14 @@
       track.setAttribute("aria-valuemin", "0");
       track.setAttribute("aria-valuemax", String(max || 1));
       track.setAttribute("aria-valuenow", String(total));
-      const detail = "합계 " + number.format(total) + " 토큰 · 최근 90일 같은 기간 최대 " + number.format(max);
-      track.title = detail;
+      const detail = "합계 " + number.format(total) + " 토큰, Codex " + number.format(codex) + ", Claude " + number.format(claude);
       track.setAttribute("aria-valuetext", detail);
-      const sources = element("div", "activity-gauge-sources");
       for (const [name, value] of [["Codex", codex], ["Claude", claude]]) {
         const segment = element("span", "activity-segment-" + name.toLowerCase());
         segment.style.width = (max ? value / max * 100 : 0) + "%";
         track.append(segment);
-        const source = element("span", "", name + " " + compact.format(value));
-        source.title = name + " " + number.format(value) + " 토큰";
-        sources.append(source);
       }
-      item.append(label, track, sources);
+      item.append(label, track);
       gauges.append(item);
     }
   }
@@ -90,12 +85,8 @@
       const today = dateKey(new Date());
       renderActivity(snapshot.activity, today);
       renderGauges(snapshot.tokens);
-      panel.querySelector("[data-activity-through]").textContent = snapshot.through.slice(5).replace("-", ".") + "까지";
-      const source = panel.querySelector("[data-activity-sources]");
-      if (snapshot.gitlab === "checkouts") source.textContent = "GitLab(로컬 커밋) · GitHub · Codex · Claude";
-      if (snapshot.gitlab === "unavailable") source.textContent = "GitHub · Codex · Claude · GitLab 연결 안 됨";
-      status.textContent = "최근 90일 내 같은 기간 최대치 기준";
-      if (today > snapshot.updated.slice(0, 10)) status.textContent += " · " + snapshot.updated.slice(5, 10).replace("-", ".") + " 갱신";
+      panel.querySelector("[data-activity-legend]").hidden = false;
+      status.hidden = true;
     })
     .catch(() => { status.textContent = "활동을 불러오지 못했습니다."; });
 })();
