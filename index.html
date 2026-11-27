@@ -199,6 +199,7 @@ html:not(.static) .band-left{opacity:var(--actions-opacity,1)}
 .shot.in{clip-path:inset(0 0 0 0)}
 .shot.in img,.shot.in video{transform:none}
 .shot.contain img{object-fit:contain;background:#fff}
+.patrol-pair .shot{height:auto;aspect-ratio:16/11}.patrol-pair .shot video{display:block}
 .shot figcaption{position:absolute;left:0;bottom:0;padding:6px 10px;font-size:11px;background:rgba(18,18,18,.78);color:#fff}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gut);margin-top:56px}
 .stats .stat b{font-size:clamp(34px,4.2vw,64px)}
@@ -607,12 +608,12 @@ html.static .shot img,html.static .shot video{transform:none}
         <div><dt>역할</dt><dd>차체·전장 설계, ESP32 펌웨어, 로봇 통합, 관제 화면 디자인 시스템</dd></div>
         <div><dt>스택</dt><dd>Jetson Orin Nano · ESP32 · ROS 2 Humble · SLAM Toolbox · Nav2 · TensorRT YOLO · Spring · React</dd></div>
       </dl>
-      <div class="media two">
+      <div class="media two-eq patrol-pair">
         <figure class="shot"><video src="./assets/media/bbiyong-avoid.mp4" poster="./assets/media/bbiyong-avoid-poster.jpg" muted loop playsinline preload="none" aria-label="로봇이 박스 장애물을 피해 주행하는 영상"></video><figcaption>장애물 회피 주행 · 실시간</figcaption></figure>
-        <figure class="shot"><img src="./assets/media/bbiyong-orincar_assembled.jpg" alt="직접 설계한 로봇 차체 3D 렌더" loading="lazy"><figcaption>직접 설계한 3단 차체 · OpenSCAD / Python CAD</figcaption></figure>
+        <figure class="shot"><video src="./assets/media/bbiyong-patrol-map.mp4" poster="./assets/media/bbiyong-patrol-map-poster.jpg" muted loop playsinline preload="none" aria-label="관제 지도에서 노란 점으로 표시된 로봇 위치와 주행 궤적"></video><figcaption>관제 지도 · 노란 점은 로봇의 현재 위치</figcaption></figure>
       </div>
       <div class="media two-eq">
-        <figure class="shot"><video src="./assets/media/bbiyong-avoid-2.mp4" muted loop playsinline preload="none" aria-label="로봇이 박스 사이를 지나가는 영상"></video><figcaption>박스 사이 통과</figcaption></figure>
+        <figure class="shot"><img src="./assets/media/bbiyong-orincar_assembled.jpg" alt="직접 설계한 로봇 차체 3D 렌더" loading="lazy"><figcaption>직접 설계한 3단 차체 · OpenSCAD / Python CAD</figcaption></figure>
         <figure class="shot contain"><img src="./assets/media/bbiyong-power_wiring.jpg" alt="배터리부터 Orin까지의 무납땜 전원 배선도" loading="lazy"><figcaption>무납땜 전원 배선 설계</figcaption></figure>
       </div>
       <div class="stats">
