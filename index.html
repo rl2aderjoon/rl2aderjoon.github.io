@@ -1055,8 +1055,43 @@ html.static .shot img,html.static .shot video{transform:none}
   function schedule() { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; frame(); }); } }
   let lastWheelAt = -Infinity, wheelDistance = 0, consumedWheel = false;
   let scrollTarget = null, scrollDeadline = 0;
+  let introScrollFrame = 0, introScrollHoldUntil = 0;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  function playIntroScroll(destination) {
+    const origin = scrollY;
+    const start = performance.now();
+    function advance(now) {
+      const progress = clamp((now - start) / 1350);
+      window.scrollTo({ top: lerp(origin, destination, inout(progress)), behavior: 'instant' });
+      if (progress < 1) {
+        introScrollFrame = requestAnimationFrame(advance);
+      } else {
+        introScrollFrame = 0;
+        introScrollHoldUntil = now + 220;
+      }
+    }
+    introScrollFrame = requestAnimationFrame(advance);
+  }
+
+  function cancelIntroScroll() {
+    if (!introScrollFrame && performance.now() >= introScrollHoldUntil) return;
+    cancelAnimationFrame(introScrollFrame);
+    introScrollFrame = 0;
+    introScrollHoldUntil = 0;
+    consumedWheel = false;
+    wheelDistance = 0;
+  }
+
+  addEventListener('pointerdown', cancelIntroScroll, { passive: true });
+  addEventListener('keydown', event => {
+    if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) cancelIntroScroll();
+  });
+  addEventListener('hashchange', cancelIntroScroll);
+  addEventListener('resize', cancelIntroScroll);
+  reducedMotion.addEventListener('change', cancelIntroScroll);
   addEventListener('wheel', event => {
-    if (isStatic() || menu.open || !event.cancelable || event.ctrlKey || event.shiftKey ||
+    if (isStatic() || reducedMotion.matches || menu.open || !event.cancelable || event.ctrlKey || event.shiftKey ||
         !event.deltaY || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
 
     const now = performance.now();
@@ -1065,8 +1100,9 @@ html.static .shot img,html.static .shot video{transform:none}
       consumedWheel = false;
     }
     if (scrollTarget !== null && (now >= scrollDeadline || Math.abs(scrollY - scrollTarget) < 2)) scrollTarget = null;
-    if (scrollTarget !== null || consumedWheel) {
+    if (introScrollFrame || now < introScrollHoldUntil || scrollTarget !== null || consumedWheel) {
       lastWheelAt = now;
+      consumedWheel = true;
       event.preventDefault();
       return;
     }
@@ -1075,11 +1111,8 @@ html.static .shot img,html.static .shot video{transform:none}
     const workTop = scrollY + work.getBoundingClientRect().top - cyF;
     if (scrollY > workTop + 2 || (direction > 0 && scrollY >= workTop - 2)) return;
     const heroRect = hero.getBoundingClientRect();
-    const stops = [
-      0,
-      scrollY + heroRect.top + (heroRect.height - innerHeight) * .91,
-      workTop,
-    ];
+    const introTop = scrollY + heroRect.top + (heroRect.height - innerHeight) * .91;
+    const stops = [0, introTop, workTop];
     const destination = direction > 0
       ? stops.find(stop => stop > scrollY + 2)
       : stops.findLast(stop => stop < scrollY - 2);
@@ -1091,9 +1124,13 @@ html.static .shot img,html.static .shot video{transform:none}
     wheelDistance = Math.sign(wheelDistance) === direction ? wheelDistance + pixels : pixels;
     if (Math.abs(wheelDistance) < 18) return;
     consumedWheel = true;
-    scrollTarget = destination;
-    scrollDeadline = now + 1200;
-    window.scrollTo({ top: destination, behavior: 'smooth' });
+    if (Math.max(scrollY, destination) <= introTop + 2) {
+      playIntroScroll(destination);
+    } else {
+      scrollTarget = destination;
+      scrollDeadline = now + 1200;
+      window.scrollTo({ top: destination, behavior: 'smooth' });
+    }
   }, { passive: false });
   addEventListener('scroll', () => { hover = -1; schedule(); }, { passive: true });
   addEventListener('resize', () => { measure(); schedule(); });
